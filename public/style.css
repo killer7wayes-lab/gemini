@@ -352,3 +352,77 @@ textarea {
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
     transform: translateY(-2px);
 }
+/* --- STEP 4 CONTROLS --- */
+.controls-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+.mini-btn {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.3);
+    color: rgba(255,255,255,0.7);
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.mini-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+/* --- THE GRID LAYOUTS (The Fix) --- */
+
+/* 1. Base Grid Settings */
+.drawn-grid {
+    display: grid;
+    gap: 10px;
+    justify-content: center;
+    margin: 0 auto 20px auto;
+    width: 100%;
+    /* Default behavior: Fit as many as possible */
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); 
+    max-width: 500px;
+}
+
+/* 2. Single Card Layout */
+.layout-1 {
+    display: flex;
+    justify-content: center;
+}
+
+/* 3. Three Card Spread (Forces 3 columns) */
+.layout-3 {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 400px;
+}
+
+/* 4. Nine Card Spread (3x3 Box) */
+.layout-9 {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 350px;
+}
+
+/* 5. Celtic Cross (Mobile Friendly) */
+/* It creates a 2-column grid so it doesn't look like a long list */
+.layout-cross {
+    grid-template-columns: repeat(3, 1fr); /* 3 Columns looks best for cross */
+    max-width: 400px;
+}
+
+/* Specific styling for the center of the cross (Card 1 & 2) */
+.tarot-card-display.cross-center-2 {
+    /* Rotates the 2nd card slightly to look like it's crossing */
+    transform: rotate(90deg);
+    z-index: 2;
+    margin-left: -40px; /* Overlaps slightly */
+}
+
+/* Card Size Adjustment for Grids */
+.tarot-card-display {
+    width: 100%; /* Fills the grid cell */
+    max-width: 90px; /* Cap size */
+    height: 130px;
+    /* ... rest of styles inherited ... */
+}
