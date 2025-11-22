@@ -1,7 +1,5 @@
-const Groq = require('groq-sdk');
-
 module.exports = async (req, res) => {
-    // 1. Handle CORS
+    // 1. CORS Setup (Allows your website to talk to the server)
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
@@ -15,42 +13,55 @@ module.exports = async (req, res) => {
         return res.status(200).end();
     }
 
-    // 2. Debugging: Check if API Key exists (Does not crash the app, just logs it)
+    // 2. Check API Key
     if (!process.env.GROQ_API_KEY) {
-        console.error("CRITICAL ERROR: GROQ_API_KEY is missing in Vercel Environment Variables.");
-        return res.status(500).json({ error: "Server Configuration Error: API Key Missing" });
+        return res.status(500).json({ error: "Configuration Error: GROQ_API_KEY is missing in Vercel Settings." });
+    }
+
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: 'Method not allowed' });
     }
 
     try {
-        // 3. Initialize Groq HERE (Inside the function, so it doesn't crash on startup)
-        const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-
         const { question, spread, cards, deckTheme } = req.body;
 
-        // Create the prompt
-        const completion = await groq.chat.completions.create({
-            messages: [
-                {
-                    role: "system",
-                    content: `You are a mystical Tarot Reader. Theme: ${deckTheme || 'Classic'}.
-                    Spread: ${spread}. Cards: ${cards ? cards.join(', ') : 'None'}.
-                    Question: "${question}".
-                    Provide a mystical, empathetic reading in HTML format (use <p>, <strong>, <br>). 
-                    Keep it under 150 words.`
-                },
-                { role: "user", content: "Read my fortune." }
-            ],
-            model: "llama3-8b-8192"
+        // 3. Direct Fetch to Groq (No Library Needed)
+        const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${process.env.GROQ_API_KEY}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                messages: [
+                    {
+                        role: "system",
+                        content: `You are a mystical Tarot Reader. Theme: ${deckTheme || 'Classic'}.
+                        Spread: ${spread}. Cards: ${cards ? cards.join(', ') : 'None'}.
+                        Question: "${question}".
+                        Provide a mystical, empathetic reading in HTML format (use <p>, <strong>, <br>). 
+                        Keep it under 150 words.`
+                    },
+                    { role: "user", content: "Read my fortune." }
+                ],
+                model: "llama3-8b-8192"
+            })
         });
 
-        const reading = completion.choices[0]?.message?.content || "The spirits are silent.";
-        
-        // Send JSON success
+        // Check if Groq itself had an error
+        if (!response.ok) {
+            const errorData = await response.text();
+            console.error("Groq API Error:", errorData);
+            return res.status(500).json({ error: `Groq API Failed: ${response.statusText}` });
+        }
+
+        const data = await response.json();
+        const reading = data.choices[0]?.message?.content || "The spirits are silent.";
+
         return res.status(200).json({ reading });
 
     } catch (error) {
-        console.error("Groq API Error:", error);
-        // Send JSON error
-        return res.status(500).json({ error: "The Oracle is currently unreachable. Please try again." });
+        console.error("Server Crash:", error);
+        return res.status(500).json({ error: `Server Crash: ${error.message}` });
     }
 };
