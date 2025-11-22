@@ -235,3 +235,120 @@ textarea {
 .social-links { display: flex; justify-content: center; gap: 20px; margin-top: 15px; font-size: 1.5rem; }
 .social-links a { color: rgba(255,255,255,0.4); transition: 0.3s; }
 .social-links a:hover { color: #fff; }
+/* --- STEP 3: VIDEO STYLE MEDITATION --- */
+
+/* Force everything to center vertically and horizontally */
+#step-3 {
+    display: none; /* Hidden by default until active */
+    text-align: center;
+    width: 100%;
+}
+#step-3.active {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 1s ease-in;
+}
+
+.meditation-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px; /* Space between elements */
+    width: 100%;
+}
+
+/* 1. The Eye & Pulse Animation */
+.eye-wrapper {
+    position: relative;
+    width: 80px; height: 80px;
+    display: flex; justify-content: center; align-items: center;
+    margin-bottom: 10px;
+}
+
+.eye-icon {
+    font-size: 3rem;
+    color: rgba(255, 255, 255, 0.9);
+    z-index: 2;
+}
+
+.pulse-ring {
+    position: absolute;
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    animation: pulse-video 4s infinite ease-in-out;
+}
+
+@keyframes pulse-video {
+    0% { transform: scale(0.8); opacity: 0.2; }
+    50% { transform: scale(1.4); opacity: 0.6; }
+    100% { transform: scale(0.8); opacity: 0.2; }
+}
+
+/* 2. Typography (The Video Look) */
+.meditation-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 3.5rem;
+    font-weight: 400;
+    color: #fff;
+    margin: 0;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+}
+
+.meditation-sub {
+    font-family: 'Lato', sans-serif; /* Clean sans-serif for reading */
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.6;
+    margin: 0;
+    max-width: 80%;
+}
+
+/* 3. The "Ghost" Input */
+.ghost-input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    text-align: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    padding: 10px;
+    width: 80%;
+    outline: none;
+    transition: 0.3s;
+}
+.ghost-input:focus {
+    border-bottom-color: var(--accent);
+}
+.ghost-input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+/* 4. The Outline Button (From the Video) */
+.btn-outline {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    color: #fff;
+    padding: 12px 40px;
+    border-radius: 50px; /* Pill shape */
+    font-family: 'Lato', sans-serif;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+}
+
+.btn-outline:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #fff;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
