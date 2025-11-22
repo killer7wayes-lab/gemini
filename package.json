@@ -1,7 +1,6 @@
 {
   "name": "tarot-ai",
   "version": "1.0.0",
-  "type": "module",
   "dependencies": {
     "groq-sdk": "^0.3.0"
   }
