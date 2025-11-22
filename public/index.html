@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tarot Reader</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Mystic AI Tarot</h1>
+            <div id="deck-indicator" class="hidden">Theme: <span id="current-theme">Classic</span></div>
+        </header>
+
+        <!-- STEP 1: CHOOSE DECK -->
+        <section id="step-1" class="step active">
+            <h2>Choose Your Atmosphere</h2>
+            <div class="options-grid">
+                <button class="btn-choice" onclick="selectDeck('Classic')">🔮 Classic</button>
+                <button class="btn-choice" onclick="selectDeck('Anime')">🌸 Anime</button>
+                <button class="btn-choice" onclick="selectDeck('Goth')">🦇 Goth</button>
+            </div>
+        </section>
+
+        <!-- STEP 2: CHOOSE SPREAD -->
+        <section id="step-2" class="step">
+            <h2>Choose Your Spread</h2>
+            <div class="options-grid">
+                <button class="btn-choice" onclick="selectSpread('1 Card Pull', 1)">Single Card</button>
+                <button class="btn-choice" onclick="selectSpread('3 Card Spread', 3)">Past, Present, Future</button>
+                <button class="btn-choice" onclick="selectSpread('Celtic Cross', 10)">Celtic Cross</button>
+                <button class="btn-choice" onclick="selectSpread('9 Card Spread', 9)">9 Card Outlook</button>
+            </div>
+        </section>
+
+        <!-- STEP 3: QUESTION & FOCUS -->
+        <section id="step-3" class="step">
+            <h2>Ask the Cards</h2>
+            <textarea id="user-question" placeholder="What is on your mind?"></textarea>
+            
+            <div class="breathing-instruction">
+                <p>✨ Close your eyes. Breathe deep. Clear your mind. ✨</p>
+            </div>
+
+            <button class="btn-main" onclick="startPulling()">I am ready</button>
+        </section>
+
+        <!-- STEP 4: PULL CARDS -->
+        <section id="step-4" class="step">
+            <h2 id="pull-instruction">Tap the deck to pull <span id="cards-left">0</span> cards</h2>
+            <div id="card-table" class="card-table">
+                <!-- Cards will be injected here -->
+                 <div id="deck-pile" class="card-back" onclick="drawCard()">
+                    <div class="inner-design"></div>
+                 </div>
+            </div>
+            
+            <div id="drawn-cards-container"></div>
+
+            <button id="read-btn" class="btn-main hidden" onclick="getAIReading()">✨ Read My Cards ✨</button>
+        </section>
+
+        <!-- STEP 5: RESULT -->
+        <section id="step-5" class="step">
+            <h2>The Interpretation</h2>
+            <div id="loading" class="hidden">Connecting to the spirits...</div>
+            <div id="ai-response"></div>
+            
+            <button class="btn-reset" onclick="location.reload()">New Reading</button>
+            
+            <div class="donate-section">
+                <p>Did this resonate? Support the server costs:</p>
+                <!-- Replace # with your PayPal/Ko-fi link -->
+                <a href="#" class="donate-btn">☕ Buy me a coffee</a>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

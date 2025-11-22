@@ -1,0 +1,158 @@
+:root {
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --accent: #9d4edd;
+    --card-bg: #1e1e1e;
+}
+
+/* Dynamic Themes */
+body.anime-theme { --accent: #ff70a6; --bg-color: #1a0b18; font-family: 'Comic Sans MS', cursive, sans-serif; }
+body.goth-theme { --accent: #8a0000; --bg-color: #000000; font-family: 'Courier New', serif; }
+body.classic-theme { --accent: #ffd700; --bg-color: #121212; font-family: 'Times New Roman', serif; }
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: sans-serif;
+    margin: 0;
+    padding: 20px;
+    transition: background 0.5s;
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+}
+
+.hidden { display: none !important; }
+.step { display: none; animation: fadeIn 0.5s; }
+.step.active { display: block; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+button {
+    padding: 15px;
+    border: 2px solid var(--accent);
+    background: transparent;
+    color: var(--text-color);
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: var(--accent);
+    color: #000;
+}
+
+textarea {
+    width: 100%;
+    height: 100px;
+    background: var(--card-bg);
+    color: var(--text-color);
+    border: 1px solid var(--accent);
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.breathing-instruction {
+    margin: 30px 0;
+    font-style: italic;
+    color: var(--accent);
+    animation: pulse 3s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+}
+
+/* Card Table */
+.card-table {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.card-back {
+    width: 100px;
+    height: 160px;
+    background: repeating-linear-gradient(
+        45deg,
+        var(--card-bg),
+        var(--card-bg) 10px,
+        var(--accent) 10px,
+        var(--accent) 11px
+    );
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 0 15px var(--accent);
+    transition: transform 0.2s;
+}
+
+.card-back:active { transform: scale(0.95); }
+
+#drawn-cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tarot-card {
+    width: 80px;
+    height: 128px;
+    background: #fff;
+    color: #000;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 5px;
+    font-size: 0.8rem;
+    border: 2px solid var(--accent);
+    animation: flip 0.6s;
+}
+
+@keyframes flip {
+    from { transform: rotateY(90deg); }
+    to { transform: rotateY(0deg); }
+}
+
+/* Result */
+#ai-response {
+    text-align: left;
+    line-height: 1.6;
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.donate-btn {
+    display: inline-block;
+    background: #ffdd00;
+    color: #000;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 20px;
+    font-weight: bold;
+}
