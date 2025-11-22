@@ -1,41 +1,55 @@
-// This runs on the Vercel server, keeping your key safe.
 const Groq = require('groq-sdk');
 
+// Initialize Groq
 const groq = new Groq({
     apiKey: process.env.GROQ_API_KEY
 });
 
-export default async function handler(req, res) {
-    if (req.method !== 'POST') {
-        return res.status(405).json({ message: 'Method not allowed' });
+module.exports = async (req, res) => {
+    // 1. Handle CORS (allows your frontend to talk to backend)
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+    res.setHeader(
+        'Access-Control-Allow-Headers',
+        'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+    );
+
+    if (req.method === 'OPTIONS') {
+        res.status(200).end();
+        return;
     }
 
-    const { question, spread, cards, deckTheme } = req.body;
+    // 2. Check for API Key
+    if (!process.env.GROQ_API_KEY) {
+        return res.status(500).json({ error: "Server Error: GROQ_API_KEY is missing in Vercel Settings." });
+    }
 
-    // Construct the prompt for the AI
-    const systemPrompt = `You are a mystical, intuitive Tarot Reader. 
-    The user is using a "${deckTheme}" themed deck.
-    They asked: "${question}".
-    Spread Type: ${spread}.
-    
-    The cards drawn are: ${cards.join(', ')}.
-    
-    Provide a reading based on these cards. Be empathetic, mystical, and concise. 
-    Format the response with HTML tags (like <p>, <strong>) for readability.`;
+    // 3. Logic
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: 'Method not allowed' });
+    }
 
     try {
+        const { question, spread, cards, deckTheme } = req.body;
+
+        const systemPrompt = `You are a mystical Tarot Reader. Theme: ${deckTheme}.
+        User Question: "${question}". Spread: ${spread}. Cards: ${cards.join(', ')}.
+        Give a reading. Use HTML tags like <h3>, <p>, <b>. Keep it under 200 words.`;
+
         const chatCompletion = await groq.chat.completions.create({
             messages: [
                 { role: 'system', content: systemPrompt },
-                { role: 'user', content: "Read my cards." }
+                { role: 'user', content: "Interpret my cards." }
             ],
-            model: 'llama3-8b-8192', // Fast and free model on Groq
+            model: 'llama3-8b-8192',
         });
 
-        const reading = chatCompletion.choices[0]?.message?.content || "The spirits are silent.";
+        const reading = chatCompletion.choices[0]?.message?.content || "The mists obscure the future.";
         res.status(200).json({ reading });
+
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error consulting the spirits.' });
+        console.error("Groq API Error:", error);
+        res.status(500).json({ error: error.message || 'Error consulting the spirits.' });
     }
-}
+};
