@@ -105,9 +105,20 @@ function startBreathingExercise() {
 }
 
 function startPulling() {
-    const q = document.getElementById('user-question').value;
-    if (!q.trim()) { alert("Please type a question."); return; }
-    state.question = q;
+    const qInput = document.getElementById('user-question');
+    let qValue = qInput.value.trim();
+    
+    // LOGIC: If empty, make it a "General Reading"
+    if (!qValue) {
+        qValue = "General Guidance (No specific question asked)";
+    }
+    
+    state.question = qValue;
+    
+    // Stop the breathing text interval if it's running (cleanup)
+    const text = document.getElementById('breath-text');
+    if (text) text.innerText = "";
+    
     goToStep(4);
 }
 
