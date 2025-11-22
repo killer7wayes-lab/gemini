@@ -105,18 +105,33 @@
                 <button class="btn-outline" onclick="startPulling()">I Am Ready</button>
             </div>
         </section>
-        <!-- STEP 4: PULL CARDS -->
+       <!-- STEP 4: PULL CARDS (Fixed UX) -->
         <section id="step-4" class="step">
-            <h3 id="pull-instruction">Tap the Deck</h3>
-            <p style="text-align:center; opacity:0.7;">Cards remaining: <span id="cards-left">0</span></p>
-            
-            <div class="table-top">
-                 <div id="deck-pile" class="card-stack" onclick="drawCard()"></div>
-            </div>
-            
-            <div id="drawn-cards-container"></div>
+            <div class="ritual-container">
+                <h3 class="ritual-title">The Fates Await</h3>
+                
+                <div class="controls-row">
+                    <p class="ritual-sub">Cards remaining: <span id="cards-left" class="counter-glow">0</span></p>
+                    <!-- NEW SHUFFLE BUTTON -->
+                    <button class="mini-btn" onclick="resetPullingStage()" title="Reshuffle / Reset">
+                        <i class="fas fa-sync-alt"></i> Restart
+                    </button>
+                </div>
+                
+                <!-- The Deck Pile -->
+                <div class="deck-area">
+                     <div id="deck-pile" class="card-stack" onclick="drawCard()">
+                        <div class="deck-pattern"></div>
+                     </div>
+                </div>
+                
+                <!-- Drawn Cards (Grid Layout) -->
+                <!-- Note: The class 'layout-3' or 'layout-cross' will be added by JS -->
+                <div id="drawn-cards-container" class="drawn-grid"></div>
 
-            <button id="read-btn" class="btn-action hidden" onclick="getAIReading()">✨ Reveal Prophecy ✨</button>
+                <!-- Reveal Button -->
+                <button id="read-btn" class="btn-outline hidden" onclick="getAIReading()">✨ Reveal Prophecy ✨</button>
+            </div>
         </section>
 
         <!-- STEP 5: READING -->
