@@ -1,5 +1,5 @@
 module.exports = async (req, res) => {
-    // 1. CORS Setup (Allows your website to talk to the server)
+    // 1. CORS Setup
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
@@ -15,7 +15,7 @@ module.exports = async (req, res) => {
 
     // 2. Check API Key
     if (!process.env.GROQ_API_KEY) {
-        return res.status(500).json({ error: "Configuration Error: GROQ_API_KEY is missing in Vercel Settings." });
+        return res.status(500).json({ error: "Configuration Error: GROQ_API_KEY is missing." });
     }
 
     if (req.method !== 'POST') {
@@ -25,7 +25,12 @@ module.exports = async (req, res) => {
     try {
         const { question, spread, cards, deckTheme } = req.body;
 
-        // 3. Direct Fetch to Groq (No Library Needed)
+        // Safe checks to prevent empty values
+        const safeTheme = deckTheme || "Mystic";
+        const safeCards = (cards && cards.length > 0) ? cards.join(', ') : "One random card";
+        const safeQuestion = question || "General guidance";
+
+        // 3. Direct Fetch to Groq
         const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
             method: "POST",
             headers: {
@@ -33,26 +38,33 @@ module.exports = async (req, res) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
+                // SWITCHING to Mixtral (Very stable model)
+                model: "mixtral-8x7b-32768", 
                 messages: [
                     {
                         role: "system",
-                        content: `You are a mystical Tarot Reader. Theme: ${deckTheme || 'Classic'}.
-                        Spread: ${spread}. Cards: ${cards ? cards.join(', ') : 'None'}.
-                        Question: "${question}".
-                        Provide a mystical, empathetic reading in HTML format (use <p>, <strong>, <br>). 
-                        Keep it under 150 words.`
+                        content: `You are a Tarot Reader. Theme: ${safeTheme}. Spread: ${spread}. Cards: ${safeCards}. Question: ${safeQuestion}. Keep it mystical, under 150 words. Use HTML tags.`
                     },
-                    { role: "user", content: "Read my fortune." }
-                ],
-                model: "llama3-8b-8192"
+                    { 
+                        role: "user", 
+                        content: "Interpret this." 
+                    }
+                ]
             })
         });
 
-        // Check if Groq itself had an error
+        // 4. Handle Groq Errors (DETAILED)
         if (!response.ok) {
-            const errorData = await response.text();
-            console.error("Groq API Error:", errorData);
-            return res.status(500).json({ error: `Groq API Failed: ${response.statusText}` });
+            const errorText = await response.text(); // Get the real error message
+            console.error("Groq API Error Details:", errorText);
+            
+            // Try to parse the JSON error to show a clean message, otherwise show raw text
+            try {
+                const errorJson = JSON.parse(errorText);
+                return res.status(500).json({ error: `Groq Error: ${errorJson.error.message}` });
+            } catch (parseError) {
+                return res.status(500).json({ error: `Groq Failed: ${errorText}` });
+            }
         }
 
         const data = await response.json();
