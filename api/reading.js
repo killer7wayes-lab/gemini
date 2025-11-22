@@ -25,9 +25,9 @@ module.exports = async (req, res) => {
     try {
         const { question, spread, cards, deckTheme } = req.body;
 
-        // Safe checks to prevent empty values
+        // Safe checks
         const safeTheme = deckTheme || "Mystic";
-        const safeCards = (cards && cards.length > 0) ? cards.join(', ') : "One random card";
+        const safeCards = (cards && cards.length > 0) ? cards.join(', ') : "The Fool";
         const safeQuestion = question || "General guidance";
 
         // 3. Direct Fetch to Groq
@@ -38,31 +38,34 @@ module.exports = async (req, res) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                // SWITCHING to Mixtral (Very stable model)
-                model: "mixtral-8x7b-32768", 
+                // UPDATED MODEL ID (The fix)
+                model: "llama-3.3-70b-versatile", 
                 messages: [
                     {
                         role: "system",
-                        content: `You are a Tarot Reader. Theme: ${safeTheme}. Spread: ${spread}. Cards: ${safeCards}. Question: ${safeQuestion}. Keep it mystical, under 150 words. Use HTML tags.`
+                        content: `You are a mystical Tarot Reader. Theme: ${safeTheme}. 
+                        Spread: ${spread}. Cards: ${safeCards}. Question: "${safeQuestion}".
+                        Provide a deep, empathetic reading. Use HTML tags like <p>, <strong>, <em>. 
+                        Keep it under 200 words.`
                     },
                     { 
                         role: "user", 
-                        content: "Interpret this." 
+                        content: "Read my cards." 
                     }
                 ]
             })
         });
 
-        // 4. Handle Groq Errors (DETAILED)
+        // 4. Handle Errors
         if (!response.ok) {
-            const errorText = await response.text(); // Get the real error message
-            console.error("Groq API Error Details:", errorText);
+            const errorText = await response.text();
+            console.error("Groq API Error:", errorText);
             
-            // Try to parse the JSON error to show a clean message, otherwise show raw text
             try {
                 const errorJson = JSON.parse(errorText);
+                // Show the specific error from Groq so we know if the model changes again
                 return res.status(500).json({ error: `Groq Error: ${errorJson.error.message}` });
-            } catch (parseError) {
+            } catch (e) {
                 return res.status(500).json({ error: `Groq Failed: ${errorText}` });
             }
         }
