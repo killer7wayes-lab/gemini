@@ -1,158 +1,252 @@
 :root {
-    --bg-color: #121212;
-    --text-color: #e0e0e0;
-    --accent: #9d4edd;
-    --card-bg: #1e1e1e;
+    --bg-gradient: linear-gradient(135deg, #1e1e2f 0%, #0a0a12 100%);
+    --glass: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --accent: #bb86fc;
+    --text: #ffffff;
+    --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Dynamic Themes */
-body.anime-theme { --accent: #ff70a6; --bg-color: #1a0b18; font-family: 'Comic Sans MS', cursive, sans-serif; }
-body.goth-theme { --accent: #8a0000; --bg-color: #000000; font-family: 'Courier New', serif; }
-body.classic-theme { --accent: #ffd700; --bg-color: #121212; font-family: 'Times New Roman', serif; }
+/* Themes */
+body.anime-theme { --bg-gradient: linear-gradient(135deg, #2a1b3d 0%, #44318d 100%); --accent: #ff70a6; }
+body.goth-theme { --bg-gradient: linear-gradient(135deg, #000000 0%, #2b0505 100%); --accent: #8a0000; font-family: 'Courier New', serif; }
+body.classic-theme { --bg-gradient: linear-gradient(135deg, #0f2027 0%, #203a43 100%); --accent: #ffd700; }
 
 body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    font-family: sans-serif;
+    background: var(--bg-gradient);
+    color: var(--text);
+    font-family: var(--font-main);
     margin: 0;
-    padding: 20px;
-    transition: background 0.5s;
+    min-height: 100vh;
     display: flex;
+    align-items: center;
     justify-content: center;
+    overflow-x: hidden;
 }
 
-.container {
-    max-width: 600px;
-    width: 100%;
-    text-align: center;
+.main-glass-panel {
+    background: var(--glass);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 30px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    position: relative;
+    min-height: 600px;
 }
 
-.hidden { display: none !important; }
-.step { display: none; animation: fadeIn 0.5s; }
+/* Header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--glass-border);
+    padding-bottom: 10px;
+}
+
+h1 { font-size: 1.5rem; margin: 0; text-shadow: 0 0 10px var(--accent); }
+h3 { color: var(--accent); }
+
+.nav-btn {
+    background: none;
+    border: none;
+    color: var(--text);
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+/* Steps */
+.step { display: none; animation: fadeUp 0.5s forwards; }
 .step.active { display: block; }
+.hidden { display: none !important; }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-.options-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 10px;
-    margin-top: 20px;
+/* Card Choices */
+.cards-grid {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
 }
 
-button {
-    padding: 15px;
-    border: 2px solid var(--accent);
-    background: transparent;
-    color: var(--text-color);
+.choice-card {
+    background: rgba(0,0,0,0.3);
+    padding: 20px;
+    border-radius: 15px;
     cursor: pointer;
-    border-radius: 8px;
-    font-size: 1.1rem;
+    width: 80px;
+    text-align: center;
+    border: 2px solid transparent;
     transition: 0.3s;
 }
 
-button:hover {
+.choice-card:hover { border-color: var(--accent); transform: translateY(-5px); }
+.choice-card .icon { font-size: 2rem; margin-bottom: 10px; }
+
+/* Buttons */
+button { cursor: pointer; }
+.list-options button {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 10px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--glass-border);
+    color: white;
+    border-radius: 10px;
+    text-align: left;
+    transition: 0.2s;
+}
+.list-options button:hover { background: var(--accent); color: #000; }
+
+.btn-action {
+    width: 100%;
+    padding: 15px;
     background: var(--accent);
+    border: none;
+    border-radius: 25px;
+    font-weight: bold;
     color: #000;
+    margin-top: 20px;
+    font-size: 1rem;
+}
+
+/* Interactive Breathing */
+.breathing-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 30px 0;
+}
+
+.breathing-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 20px var(--accent);
+    animation: breatheAnim 8s infinite ease-in-out;
+}
+
+@keyframes breatheAnim {
+    0%, 100% { transform: scale(1); opacity: 0.5; } /* Exhale */
+    50% { transform: scale(2.5); opacity: 1; } /* Inhale */
 }
 
 textarea {
     width: 100%;
-    height: 100px;
-    background: var(--card-bg);
-    color: var(--text-color);
-    border: 1px solid var(--accent);
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--glass-border);
+    color: white;
     padding: 10px;
-    border-radius: 8px;
-    margin-top: 20px;
+    border-radius: 10px;
+    box-sizing: border-box; 
+    resize: none;
+    height: 80px;
 }
 
-.breathing-instruction {
-    margin: 30px 0;
-    font-style: italic;
-    color: var(--accent);
-    animation: pulse 3s infinite;
-}
-
-@keyframes pulse {
-    0% { opacity: 0.5; }
-    50% { opacity: 1; }
-    100% { opacity: 0.5; }
-}
-
-/* Card Table */
-.card-table {
-    display: flex;
-    justify-content: center;
-    margin: 20px 0;
-}
-
-.card-back {
+/* Deck & Cards */
+.card-stack {
     width: 100px;
     height: 160px;
-    background: repeating-linear-gradient(
-        45deg,
-        var(--card-bg),
-        var(--card-bg) 10px,
-        var(--accent) 10px,
-        var(--accent) 11px
-    );
+    background: #222;
+    border: 2px solid var(--accent);
     border-radius: 10px;
+    margin: 0 auto 20px;
     cursor: pointer;
-    box-shadow: 0 0 15px var(--accent);
-    transition: transform 0.2s;
+    position: relative;
+    box-shadow: 5px 5px 0 rgba(0,0,0,0.5);
+    transition: transform 0.1s;
 }
-
-.card-back:active { transform: scale(0.95); }
+.card-stack:active { transform: translateY(2px); box-shadow: 2px 2px 0 rgba(0,0,0,0.5); }
 
 #drawn-cards-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: 8px;
 }
 
-.tarot-card {
-    width: 80px;
-    height: 128px;
-    background: #fff;
-    color: #000;
+.mini-card {
+    width: 60px;
+    height: 96px;
+    background: white;
+    color: black;
     border-radius: 5px;
+    font-size: 0.6rem;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 5px;
-    font-size: 0.8rem;
-    border: 2px solid var(--accent);
-    animation: flip 0.6s;
+    padding: 2px;
+    animation: flipIn 0.5s;
 }
 
-@keyframes flip {
+@keyframes flipIn {
     from { transform: rotateY(90deg); }
     to { transform: rotateY(0deg); }
 }
 
-/* Result */
+/* Result Area */
 #ai-response {
-    text-align: left;
-    line-height: 1.6;
-    background: var(--card-bg);
-    padding: 20px;
+    background: rgba(0,0,0,0.2);
+    padding: 15px;
     border-radius: 10px;
-    margin-bottom: 20px;
+    max-height: 300px;
+    overflow-y: auto;
+    line-height: 1.5;
+    font-size: 0.95rem;
 }
+
+#error-box {
+    color: #ff6b6b;
+    background: rgba(255, 0, 0, 0.1);
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    border: 1px solid #ff6b6b;
+}
+
+.spinner {
+    width: 30px;
+    height: 30px;
+    border: 4px solid rgba(255,255,255,0.1);
+    border-top: 4px solid var(--accent);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 10px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 
 .donate-btn {
     display: inline-block;
-    background: #ffdd00;
-    color: #000;
-    padding: 10px 20px;
+    margin-top: 10px;
+    color: #ffdd00;
     text-decoration: none;
-    border-radius: 20px;
     font-weight: bold;
+    border: 1px solid #ffdd00;
+    padding: 8px 20px;
+    border-radius: 20px;
+}
+.footer-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+    align-items: center;
+}
+.btn-secondary {
+    background: transparent;
+    border: 1px solid var(--text);
+    color: var(--text);
+    padding: 8px 20px;
+    border-radius: 20px;
 }
