@@ -38,7 +38,7 @@ body {
     overflow: hidden;
 }
 
-/* The Big Sun at the bottom (Like the screenshot) */
+/* The Big Sun at the bottom */
 .big-sun {
     position: absolute;
     bottom: -50px;
@@ -96,7 +96,7 @@ body {
     z-index: 10; /* In front of the background elements */
 }
 
-/* HEADER STYLING */
+/* --- HEADER STYLING (FIXED) --- */
 header {
     margin-bottom: 25px;
     border-bottom: 1px solid rgba(255,255,255,0.1);
@@ -107,12 +107,14 @@ header {
     justify-content: center;
     position: relative;
     min-height: 50px;
+    width: 100%; /* Ensures header uses full width */
+    box-sizing: border-box; /* Prevents padding from breaking layout */
 }
 
 h1 {
     margin: 0;
     font-family: var(--font-header);
-    font-size: 2.2rem; /* Slightly larger elegant font */
+    font-size: 2.2rem;
     font-weight: 400;
     color: #fff;
     text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
@@ -120,7 +122,12 @@ h1 {
     transition: 0.3s;
     text-align: center;
     letter-spacing: 2px;
+    
+    /* THE FIX: Padding protects text from hitting the back arrow */
+    padding: 0 45px; 
+    line-height: 1.2; /* Better wrapping on mobile */
 }
+
 h1:hover { transform: scale(1.02); text-shadow: 0 0 25px var(--accent); }
 
 /* Badge */
@@ -136,12 +143,18 @@ h1:hover { transform: scale(1.02); text-shadow: 0 0 25px var(--accent); }
     letter-spacing: 2px;
 }
 
-/* Back Button */
+/* Back Button (Fixed Position) */
 #back-btn {
-    position: absolute; left: 0; top: 5px;
-    background: none; border: none;
+    position: absolute; 
+    left: 0; 
+    top: 0;
+    background: none; 
+    border: none;
     color: rgba(255,255,255,0.6);
-    font-size: 1.2rem; cursor: pointer;
+    font-size: 1.4rem; 
+    cursor: pointer;
+    padding: 10px; /* Bigger tap area */
+    z-index: 100; /* Ensures it sits on top */
 }
 #back-btn:hover { color: white; }
 
