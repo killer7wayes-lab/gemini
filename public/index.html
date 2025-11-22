@@ -10,25 +10,35 @@
 </head>
 <body>
 
+    <!-- CELESTIAL BACKGROUND ELEMENTS (The Decor) -->
+    <div class="celestial-wrapper">
+        <i class="fas fa-sun big-sun"></i>
+        <i class="fas fa-moon big-moon"></i>
+        <i class="fas fa-star big-star star-1"></i>
+        <i class="fas fa-star big-star star-2"></i>
+        <i class="fas fa-star big-star star-3"></i>
+        <i class="fas fa-certificate big-sparkle"></i>
+    </div>
+
     <div class="main-glass-panel">
         <header>
-            <!-- Back button (Hidden on home) -->
             <button id="back-btn" class="nav-btn hidden" onclick="goBack()">
                 <i class="fas fa-arrow-left"></i>
             </button>
             
-            <!-- Clickable Title to Reset -->
             <h1 onclick="location.reload()" title="Reset Reading">Mystic AI Tarot</h1>
             
-            <!-- Theme Indicator -->
             <div id="deck-indicator" class="hidden">
                 <span id="current-theme">Classic</span>
             </div>
         </header>
 
-        <!-- STEP 1: CHOOSE DECK (Homepage Look) -->
+        <!-- STEP 1: CHOOSE DECK -->
         <section id="step-1" class="step active">
-            <h3 class="section-title">Choose Your Deck</h3>
+            <h3 class="section-title">
+                <span style="font-family: 'Playfair Display', serif; font-style: italic; font-size: 0.9em; display:block; margin-bottom:5px; opacity:0.8;">Design your destiny</span>
+                Choose Your Path
+            </h3>
             
             <div class="cards-grid">
                 <div class="choice-card" onclick="selectDeck('Classic')">
@@ -45,7 +55,6 @@
                 </div>
             </div>
 
-            <!-- The Disclaimer -->
             <div class="footer-disclaimer">
                 <p>✨ Powered by <strong>Fisher-Yates</strong> True Random Shuffling.</p>
                 <p class="sub-disclaimer">This is for entertainment purposes only.<br>You create your own destiny.</p>
