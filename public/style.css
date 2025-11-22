@@ -1,10 +1,9 @@
-/* Google Fonts - Added 'Playfair Display' for that elegant look */
+/* Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap');
 
 :root {
-    /* Deep Night Sky Palette */
-    --container-bg: rgba(20, 30, 48, 0.65); /* More transparent to see the background */
-    --accent: #fffdd0; /* Cream/Moonlight color */
+    --container-bg: rgba(20, 30, 48, 0.75); /* Slightly darker for readability */
+    --accent: #fffdd0; 
     --text: #fff;
     --font-header: 'Playfair Display', serif;
     --font-body: 'Lato', sans-serif;
@@ -15,67 +14,61 @@ body.anime-theme { --accent: #ff70a6; }
 body.goth-theme { --accent: #ff3333; }
 
 body {
-    /* THE CLOUDY NIGHT SKY BACKGROUND */
+    /* Background Image */
     background: url('https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?q=80&w=2565&auto=format&fit=crop') no-repeat center center fixed;
     background-size: cover;
     color: var(--text);
     font-family: var(--font-body);
     margin: 0;
+    
+    /* SCROLLING FIXES */
     min-height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: center;
-    overflow: hidden; /* Keeps the floating elements contained */
+    align-items: flex-start; /* Starts content at top (fixes top cut-off) */
+    padding: 40px 0; /* Adds breathing room on mobile */
+    overflow-x: hidden; /* Prevents side-scrolling */
+    overflow-y: auto;   /* ENABLE SCROLLING */
     position: relative;
 }
 
-/* --- CELESTIAL DECORATIONS (The Floating Elements) --- */
+/* --- CELESTIAL DECORATIONS (FIXED POSITION) --- */
+/* This keeps the stars still while you scroll the text */
 .celestial-wrapper {
-    position: absolute;
+    position: fixed; /* Changed from absolute to fixed */
     top: 0; left: 0; width: 100%; height: 100%;
-    pointer-events: none; /* Allows clicking through them */
-    z-index: 0; /* Behind the glass panel */
+    pointer-events: none; 
+    z-index: 0; 
     overflow: hidden;
 }
 
-/* The Big Sun at the bottom */
+/* The Big Sun */
 .big-sun {
     position: absolute;
-    bottom: -50px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 300px; /* Huge */
-    color: rgba(255, 255, 255, 0.05); /* Very faint */
+    bottom: -50px; left: 50%; transform: translateX(-50%);
+    font-size: 300px;
+    color: rgba(255, 255, 255, 0.05);
     animation: rotateSlow 60s linear infinite;
 }
 
-/* The Moon Top Right */
+/* The Moon */
 .big-moon {
-    position: absolute;
-    top: 50px;
-    right: 50px;
-    font-size: 80px;
-    color: rgba(255, 255, 255, 0.1);
+    position: absolute; top: 50px; right: 50px;
+    font-size: 80px; color: rgba(255, 255, 255, 0.1);
     transform: rotate(-20deg);
 }
 
-/* Random Stars */
+/* Stars */
 .big-star { position: absolute; color: var(--accent); opacity: 0.4; animation: twinkle 3s infinite alternate; }
 .star-1 { top: 15%; left: 10%; font-size: 20px; }
 .star-2 { bottom: 20%; right: 15%; font-size: 15px; animation-delay: 1s; }
 .star-3 { top: 40%; left: 80%; font-size: 10px; animation-delay: 2s; }
-
-/* Sparkle */
 .big-sparkle {
-    position: absolute;
-    top: 10%;
-    left: 40%;
-    font-size: 30px;
-    color: rgba(255, 255, 255, 0.2);
+    position: absolute; top: 10%; left: 40%;
+    font-size: 30px; color: rgba(255, 255, 255, 0.2);
     animation: pulse 4s infinite;
 }
 
-/* ANIMATIONS */
 @keyframes rotateSlow { from { transform: translateX(-50%) rotate(0deg); } to { transform: translateX(-50%) rotate(360deg); } }
 @keyframes twinkle { from { opacity: 0.2; transform: scale(0.8); } to { opacity: 0.6; transform: scale(1.2); } }
 @keyframes pulse { 0% { opacity: 0.1; } 50% { opacity: 0.3; } 100% { opacity: 0.1; } }
@@ -88,15 +81,16 @@ body {
     -webkit-backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 20px;
-    padding: 40px;
+    padding: 30px;
     width: 90%;
     max-width: 450px;
     box-shadow: 0 20px 50px rgba(0,0,0,0.5);
     position: relative;
-    z-index: 10; /* In front of the background elements */
+    z-index: 10;
+    margin-bottom: 50px; /* Extra space at bottom for scrolling */
 }
 
-/* --- HEADER STYLING (FIXED) --- */
+/* HEADER */
 header {
     margin-bottom: 25px;
     border-bottom: 1px solid rgba(255,255,255,0.1);
@@ -104,33 +98,25 @@ header {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     position: relative;
-    min-height: 50px;
-    width: 100%; /* Ensures header uses full width */
-    box-sizing: border-box; /* Prevents padding from breaking layout */
+    width: 100%;
+    box-sizing: border-box;
 }
 
 h1 {
     margin: 0;
     font-family: var(--font-header);
-    font-size: 2.2rem;
+    font-size: 2rem;
     font-weight: 400;
     color: #fff;
     text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
     cursor: pointer;
-    transition: 0.3s;
     text-align: center;
     letter-spacing: 2px;
-    
-    /* THE FIX: Padding protects text from hitting the back arrow */
     padding: 0 45px; 
-    line-height: 1.2; /* Better wrapping on mobile */
+    line-height: 1.2;
 }
 
-h1:hover { transform: scale(1.02); text-shadow: 0 0 25px var(--accent); }
-
-/* Badge */
 #deck-indicator { margin-top: 10px; }
 #current-theme {
     font-size: 0.75rem;
@@ -143,69 +129,44 @@ h1:hover { transform: scale(1.02); text-shadow: 0 0 25px var(--accent); }
     letter-spacing: 2px;
 }
 
-/* Back Button (Fixed Position) */
 #back-btn {
-    position: absolute; 
-    left: 0; 
-    top: 0;
-    background: none; 
-    border: none;
+    position: absolute; left: 0; top: 0;
+    background: none; border: none;
     color: rgba(255,255,255,0.6);
-    font-size: 1.4rem; 
-    cursor: pointer;
-    padding: 10px; /* Bigger tap area */
-    z-index: 100; /* Ensures it sits on top */
+    font-size: 1.4rem; cursor: pointer;
+    padding: 10px; z-index: 100;
 }
-#back-btn:hover { color: white; }
 
 /* TITLES */
 h3.section-title {
     text-align: center;
     font-family: var(--font-header);
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     color: #fff;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
     font-weight: 400;
 }
 
 /* CARDS GRID */
 .cards-grid {
-    display: flex; gap: 20px; justify-content: center; margin-bottom: 40px;
+    display: flex; gap: 15px; justify-content: center; margin-bottom: 40px;
 }
 
 .choice-card {
     background: rgba(255, 255, 255, 0.03);
-    width: 100px; height: 100px;
-    border-radius: 50%; /* Make them circles like planets? Or keep squares */
-    border-radius: 16px; /* Keep rounded squares */
+    width: 90px; height: 90px;
+    border-radius: 16px;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    cursor: pointer;
-    transition: all 0.4s ease;
+    cursor: pointer; transition: all 0.4s ease;
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
-
 .choice-card:hover {
     background: rgba(255, 255, 255, 0.1);
     border-color: var(--accent);
     transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
 }
-
-.choice-card .icon { font-size: 2rem; margin-bottom: 5px; }
-.choice-card span { font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.7); }
-
-/* DISCLAIMER */
-.footer-disclaimer {
-    margin-top: 40px;
-    border-top: 1px solid rgba(255,255,255,0.1);
-    padding-top: 20px;
-    font-size: 0.85rem;
-    color: rgba(255,255,255,0.5);
-    text-align: center;
-    font-family: var(--font-header);
-    letter-spacing: 0.5px;
-}
-.sub-disclaimer { font-size: 0.7rem; font-style: italic; opacity: 0.6; margin-top: 8px; font-family: var(--font-body); }
+.choice-card .icon { font-size: 1.8rem; margin-bottom: 5px; }
+.choice-card span { font-size: 0.75rem; letter-spacing: 1px; text-transform: uppercase; }
 
 /* BUTTONS & INPUTS */
 textarea {
@@ -214,36 +175,28 @@ textarea {
     border: 1px solid rgba(255,255,255,0.1);
     color: white; padding: 15px; border-radius: 5px;
     font-family: var(--font-body);
+    box-sizing: border-box; /* Fixes padding overflow */
 }
 
 .btn-action {
     width: 100%; padding: 15px;
-    background: #fff; /* White button like reference */
-    color: #1a222b; /* Dark text */
-    border: none; border-radius: 4px; /* Sharper edges like reference */
+    background: #fff; color: #1a222b;
+    border: none; border-radius: 4px;
     font-weight: bold; text-transform: uppercase; letter-spacing: 2px;
-    cursor: pointer; margin-top: 15px; transition: 0.3s;
+    cursor: pointer; margin-top: 15px;
     font-size: 0.9rem;
 }
-.btn-action:hover { background: var(--accent); }
 
 .list-options button {
     width: 100%; padding: 15px; margin-bottom: 10px;
     background: rgba(255,255,255,0.03);
     border: 1px solid rgba(255,255,255,0.1);
     color: rgba(255,255,255,0.8);
-    border-radius: 5px; text-align: left; cursor: pointer; transition: 0.2s;
+    border-radius: 5px; text-align: left; cursor: pointer;
     font-family: var(--font-body);
 }
-.list-options button:hover { background: rgba(255,255,255,0.1); color: #fff; border-color: var(--accent); }
 
-/* UTILITIES */
-.step { display: none; animation: fadeIn 0.8s; }
-.step.active { display: block; }
-.hidden { display: none !important; }
-@keyframes fadeIn { from {opacity:0; transform:translateY(10px);} to {opacity:1; transform:translateY(0);} }
-
-/* Card Stack */
+/* CARD DISPLAY (Scroll Fix applied here naturally) */
 .card-stack {
     width: 100px; height: 160px;
     background: #222; border: 1px solid var(--accent);
@@ -259,6 +212,19 @@ textarea {
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 .tarot-card-display.reversed { transform: rotate(180deg); filter: sepia(0.5); }
+
+/* READING RESULT (Ensure text wraps) */
+#ai-response {
+    text-align: left;
+    white-space: pre-wrap; /* Preserves paragraphs */
+    margin-bottom: 20px;
+}
+
+/* UTILITIES */
+.step { display: none; animation: fadeIn 0.8s; }
+.step.active { display: block; }
+.hidden { display: none !important; }
+@keyframes fadeIn { from {opacity:0; transform:translateY(10px);} to {opacity:1; transform:translateY(0);} }
 
 /* Footer */
 .footer-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
