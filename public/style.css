@@ -1,3 +1,4 @@
+
 /* Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap');
 
@@ -509,4 +510,95 @@ textarea {
         margin-top: 0 !important; /* Remove arch offsets */
     }
     .layout-horseshoe .pos-7 { grid-column: 2; } /* Center last card */
+}
+/* ========================================= */
+/* ===  UNIVERSAL CARD DISPLAY SYSTEM    === */
+/* ========================================= */
+
+/* 1. THE OUTER BOX (The Container) */
+/* This handles position in the grid/arch, but has NO visual style */
+.tarot-card-display {
+    /* Dimensions from your layout */
+    width: 100%; 
+    max-width: 90px; 
+    height: 140px; 
+    
+    /* Transparent! */
+    background: transparent;
+    border: none;
+    padding: 0;
+    
+    /* Animation setup */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1000px; /* Allows 3D flip effect */
+    
+    /* Glide Animation */
+    animation: dealCard 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* 2. THE INNER CARD (The Actual Card) */
+/* This is what looks like a card and rotates */
+.card-inner {
+    width: 100%;
+    height: 100%;
+    
+    /* The Visuals (White card, border, etc) */
+    background: #fff;
+    color: #000;
+    border: 2px solid var(--accent);
+    border-radius: 6px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    
+    /* Centering Text */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 5px;
+    box-sizing: border-box;
+    
+    /* Smooth Rotation */
+    transition: transform 0.6s ease;
+    transform-style: preserve-3d;
+}
+
+/* 3. THE REVERSED STATE */
+.card-inner.is-flipped {
+    transform: rotate(180deg);
+    background: #e8e8e8; /* Slightly darker to show it's different */
+    border-color: #ff6b6b; /* Red border for reversed */
+}
+
+/* 4. Text Adjustment for Flipped Cards */
+/* Keeps text readable but indicates flip */
+.card-inner.is-flipped .card-name {
+    transform: rotate(0deg); /* Text stays readable? Or rotate it? */
+    /* Usually in Tarot apps, we physically rotate the whole card */
+}
+
+/* 5. Mini Icon for Reversed */
+.rev-icon {
+    color: #ff6b6b;
+    font-size: 1rem;
+    margin-top: 5px;
+}
+
+/* --- ADJUSTMENTS FOR SPECIFIC SPREADS --- */
+
+/* Horseshoe: Mini Cards */
+.layout-horseshoe .tarot-card-display {
+    height: 90px; /* Smaller height for horseshoe */
+}
+.layout-horseshoe .card-inner {
+    font-size: 0.6rem;
+}
+
+/* Celtic Cross: The 2nd Card (Crossing) */
+/* This outer box is already rotated 90deg by the layout. 
+   If the inner card is ALSO reversed, it just flips 180deg relative to that. */
+.cross-center-2 .card-inner.is-flipped {
+    transform: rotate(180deg);
 }
