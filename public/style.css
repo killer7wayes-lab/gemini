@@ -454,3 +454,48 @@ textarea {
 .layout-cross .pos-8 { grid-area: s8; }
 .layout-cross .pos-9 { grid-area: s9; }
 .layout-cross .pos-10 { grid-area: s10; }
+/* 6. HORSESHOE SPREAD (The Arch) */
+.layout-horseshoe {
+    display: grid;
+    /* 7 Columns: One for each card width */
+    grid-template-columns: repeat(7, 1fr);
+    /* 4 Rows: To create the height difference (The Arch) */
+    grid-template-rows: repeat(4, 60px); 
+    gap: 5px;
+    width: 100%;
+    max-width: 650px; /* Needs to be wider */
+    
+    /* THE MAP (Visualizing the Arch) */
+    /* . = empty space */
+    grid-template-areas:
+        ".  .  .  c4 .  .  ."
+        ".  .  c3 .  c5 .  ."
+        ".  c2 .  .  .  c6 ."
+        "c1 .  .  .  .  .  c7";
+}
+
+/* Map the positions to the grid areas */
+.layout-horseshoe .pos-1 { grid-area: c1; align-self: end; }
+.layout-horseshoe .pos-2 { grid-area: c2; }
+.layout-horseshoe .pos-3 { grid-area: c3; }
+.layout-horseshoe .pos-4 { grid-area: c4; align-self: start; z-index: 2; } /* The Peak */
+.layout-horseshoe .pos-5 { grid-area: c5; }
+.layout-horseshoe .pos-6 { grid-area: c6; }
+.layout-horseshoe .pos-7 { grid-area: c7; align-self: end; }
+
+/* Mobile Adjustment for Horseshoe */
+/* On phones, a 7-column arch is too wide and makes cards tiny. 
+   We change it to a staggered vertical list for readability. */
+@media (max-width: 500px) {
+    .layout-horseshoe {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+    .layout-horseshoe .tarot-card-display {
+        /* Make them normal size on mobile */
+        width: 30% !important; 
+        margin-bottom: 10px;
+    }
+}
