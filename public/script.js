@@ -113,7 +113,7 @@ function startPulling() {
 }
 
 // Step 4: Draw Card
-function drawCard() {
+   function drawCard() {
     if (state.cardsDrawn.length >= state.cardsNeeded) return;
 
     const cardName = shuffledDeck.pop(); 
@@ -124,11 +124,10 @@ function drawCard() {
     const cardDiv = document.createElement('div');
     cardDiv.className = 'tarot-card-display';
     
-    // Special check for Celtic Cross Center cards (Card 1 & 2)
-    if (state.spreadName.includes('Cross')) {
-        if (state.cardsDrawn.length === 1) cardDiv.classList.add('cross-center-1');
-        if (state.cardsDrawn.length === 2) cardDiv.classList.add('cross-center-2');
-    }
+    // --- THE NEW PART: Add Position Class (pos-1, pos-2, etc.) ---
+    // This allows CSS to move specific cards to form the Cross shape
+    const positionNumber = state.cardsDrawn.length;
+    cardDiv.classList.add(`pos-${positionNumber}`);
 
     if (isReversed) {
         cardDiv.classList.add('reversed');
