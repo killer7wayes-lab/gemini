@@ -86,9 +86,10 @@ function selectSpread(name, count) {
     
     if (count === 1) grid.classList.add('layout-1');
     else if (count === 3) grid.classList.add('layout-3');
+    else if (count === 7) grid.classList.add('layout-horseshoe'); // <--- NEW!
     else if (count === 9) grid.classList.add('layout-9');
     else if (name.includes('Cross')) grid.classList.add('layout-cross');
-    else grid.classList.add('layout-default'); // Fallback for 7 cards etc
+    else grid.classList.add('layout-default'); 
 
     goToStep(3);
     startBreathingExercise();
