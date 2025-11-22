@@ -125,23 +125,42 @@ function startPulling() {
     const cardDiv = document.createElement('div');
     cardDiv.className = 'tarot-card-display';
     
-    // --- THE NEW PART: Add Position Class (pos-1, pos-2, etc.) ---
-    // This allows CSS to move specific cards to form the Cross shape
+function drawCard() {
+    if (state.cardsDrawn.length >= state.cardsNeeded) return;
+
+    const cardName = shuffledDeck.pop(); 
+    const isReversed = Math.random() < 0.4; // 40% chance
+    state.cardsDrawn.push({ name: cardName, isReversed: isReversed });
+
+    const container = document.getElementById('drawn-cards-container');
+    const cardDiv = document.createElement('div');
+    cardDiv.className = 'tarot-card-display';
+    
+    // 1. Add Position Class (Critical for Horseshoe/Cross layouts)
     const positionNumber = state.cardsDrawn.length;
     cardDiv.classList.add(`pos-${positionNumber}`);
 
-    if (isReversed) {
-        cardDiv.classList.add('reversed');
-        cardDiv.innerHTML = `<span style="transform: rotate(180deg)">${cardName}</span>`;
-    } else {
-        cardDiv.innerText = cardName;
+    // 2. Special check for Celtic Cross Center (Card 2 needs special layering)
+    if (state.spreadName.includes('Cross') && positionNumber === 2) {
+        cardDiv.classList.add('cross-center-2');
     }
+
+    // 3. THE FIX: Create the Inner Box structure
+    // We do NOT rotate the outer 'cardDiv'. We rotate this inner div.
+    cardDiv.innerHTML = `
+        <div class="card-inner ${isReversed ? 'is-flipped' : ''}">
+            <div class="card-name">${cardName}</div>
+            ${isReversed ? '<div class="rev-icon" style="font-size:0.8rem; margin-top:5px;">↻</div>' : ''}
+        </div>
+    `;
     
     container.appendChild(cardDiv);
 
+    // Update Counter
     const remaining = state.cardsNeeded - state.cardsDrawn.length;
     document.getElementById('cards-left').innerText = remaining;
 
+    // Check if finished
     if (remaining === 0) {
         document.getElementById('deck-pile').style.display = 'none';
         const btn = document.getElementById('read-btn');
