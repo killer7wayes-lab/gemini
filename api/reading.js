@@ -1,5 +1,5 @@
 module.exports = async (req, res) => {
-    // 1. CORS Setup
+    // 1. Standard Setup
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
@@ -8,29 +8,42 @@ module.exports = async (req, res) => {
         'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
     );
 
-    // Handle Preflight
-    if (req.method === 'OPTIONS') {
-        return res.status(200).end();
-    }
+    if (req.method === 'OPTIONS') return res.status(200).end();
 
-    // 2. Check API Key
     if (!process.env.GROQ_API_KEY) {
         return res.status(500).json({ error: "Configuration Error: GROQ_API_KEY is missing." });
-    }
-
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method not allowed' });
     }
 
     try {
         const { question, spread, cards, deckTheme } = req.body;
 
-        // Safe checks
-        const safeTheme = deckTheme || "Mystic";
-        const safeCards = (cards && cards.length > 0) ? cards.join(', ') : "The Fool";
-        const safeQuestion = question || "General guidance";
+        // Format cards for the AI (e.g., "The Fool (Reversed)")
+        const formattedCards = cards.map(c => `${c.name} ${c.isReversed ? '(Reversed)' : '(Upright)'}`).join(', ');
 
-        // 3. Direct Fetch to Groq
+        // 2. The "Pro" Prompt
+        const systemPrompt = `
+        You are an intuitive, mystical Tarot Reader. 
+        Theme: ${deckTheme}.
+        User's Question: "${question || "General guidance"}".
+        Spread Type: ${spread}.
+        
+        Cards Drawn: ${formattedCards}.
+
+        INSTRUCTIONS:
+        1. If a card is "(Reversed)", interpret its blocked energy or internal struggle.
+        2. Connect the cards together into a story, don't just list them.
+        3. Theme Adjustments:
+           - If 'Anime': Use metaphors about heroes, training arcs, and destiny. Be energetic.
+           - If 'Goth': Be poetic, darker, focus on shadows and deep emotions.
+           - If 'Classic': Be wise, traditional, and calm.
+        4. Format: Use <h3> for headings, <p> for paragraphs, and <b> for key terms.
+        5. Structure: 
+           - Start with the "Vibe" (Overall energy).
+           - Interpret the cards.
+           - End with "Actionable Advice".
+        `;
+
+        // 3. Call Groq
         const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
             method: "POST",
             headers: {
@@ -38,45 +51,23 @@ module.exports = async (req, res) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                // UPDATED MODEL ID (The fix)
                 model: "llama-3.3-70b-versatile", 
                 messages: [
-                    {
-                        role: "system",
-                        content: `You are a mystical Tarot Reader. Theme: ${safeTheme}. 
-                        Spread: ${spread}. Cards: ${safeCards}. Question: "${safeQuestion}".
-                        Provide a deep, empathetic reading. Use HTML tags like <p>, <strong>, <em>. 
-                        Keep it under 200 words.`
-                    },
-                    { 
-                        role: "user", 
-                        content: "Read my cards." 
-                    }
+                    { role: "system", content: systemPrompt },
+                    { role: "user", content: "Reveal the truth." }
                 ]
             })
         });
 
-        // 4. Handle Errors
         if (!response.ok) {
-            const errorText = await response.text();
-            console.error("Groq API Error:", errorText);
-            
-            try {
-                const errorJson = JSON.parse(errorText);
-                // Show the specific error from Groq so we know if the model changes again
-                return res.status(500).json({ error: `Groq Error: ${errorJson.error.message}` });
-            } catch (e) {
-                return res.status(500).json({ error: `Groq Failed: ${errorText}` });
-            }
+            throw new Error((await response.text()));
         }
 
         const data = await response.json();
-        const reading = data.choices[0]?.message?.content || "The spirits are silent.";
-
-        return res.status(200).json({ reading });
+        return res.status(200).json({ reading: data.choices[0].message.content });
 
     } catch (error) {
-        console.error("Server Crash:", error);
-        return res.status(500).json({ error: `Server Crash: ${error.message}` });
+        console.error("Server Error:", error);
+        return res.status(500).json({ error: "The spirits are overwhelmed. Please try again." });
     }
 };
