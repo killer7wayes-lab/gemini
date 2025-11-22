@@ -81,26 +81,29 @@
             </div>
         </section>
 
-        <!-- STEP 3: QUESTION & BREATHE -->
+      <!-- STEP 3: BREATHE & FOCUS (Video Style) -->
         <section id="step-3" class="step">
-            
-            <!-- The Heartbeat Animation Container -->
-            <div class="breathing-wrapper">
-                <div class="breathing-halo"></div>
-                <i class="fas fa-eye breathing-icon"></i>
+            <div class="meditation-container">
+                
+                <!-- The Pulsing Eye -->
+                <div class="eye-wrapper">
+                    <div class="pulse-ring"></div>
+                    <i class="far fa-eye eye-icon"></i>
+                </div>
+
+                <!-- Elegant Text -->
+                <h2 class="meditation-title">"Breathe."</h2>
+                <p class="meditation-sub">
+                    Close your eyes. Visualize your question.<br>
+                    When you feel the pull, proceed.
+                </p>
+
+                <!-- Minimalist Input (Ghost Style) -->
+                <input type="text" id="user-question" class="ghost-input" placeholder="Type your question (Optional)..." autocomplete="off">
+
+                <!-- Transparent Outline Button -->
+                <button class="btn-outline" onclick="startPulling()">I Am Ready</button>
             </div>
-
-            <h2 class="breathe-title">"Breathe."</h2>
-            
-            <p class="breathe-sub">
-                Close your eyes. Visualize your question.<br>
-                When you feel the pull, proceed.
-            </p>
-
-            <!-- Question Input (Now marked Optional) -->
-            <textarea id="user-question" placeholder="Type your specific question here (Optional)..."></textarea>
-
-            <button class="btn-action" onclick="startPulling()">I Am Ready</button>
         </section>
         <!-- STEP 4: PULL CARDS -->
         <section id="step-4" class="step">
