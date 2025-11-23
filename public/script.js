@@ -161,6 +161,52 @@ function drawCard() {
         cardDiv.classList.add('cross-center-2');
     }
 
+    // --- 3. IMAGE LOGIC START ---
+    let cardContent = "";
+
+    if (state.deckTheme === 'Goth') {
+        // CONVERT NAME TO FILENAME: "The Fool" -> "the_sun.png"
+        const fileName = cardName.toLowerCase().split(' ').join('_') + ".png";
+        const folderPath = "decks/goth/"; // Make sure this folder exists!
+        
+        cardContent = `<img src="${folderPath}${fileName}" class="card-img" alt="${cardName}">`;
+    } else {
+        // Default Text for other themes
+        cardContent = `<div class="card-name">${cardName}</div>`;
+    }
+    // --- IMAGE LOGIC END ---
+
+    // 4. Render the Card
+    cardDiv.innerHTML = `
+        <div class="card-inner ${isReversed ? 'is-flipped' : ''}">
+            ${cardContent}
+            ${isReversed ? '<div class="rev-icon" style="font-size:0.8rem; margin-top:5px;">↻</div>' : ''}
+        </div>
+    `;
+    
+    container.appendChild(cardDiv);
+
+    // Update Counter
+    const remaining = state.cardsNeeded - state.cardsDrawn.length;
+    document.getElementById('cards-left').innerText = remaining;
+
+    if (remaining === 0) {
+        document.getElementById('deck-pile').style.display = 'none';
+        const btn = document.getElementById('read-btn');
+        btn.classList.remove('hidden');
+        btn.style.animation = "fadeIn 1s";
+    }
+}
+    
+    // 1. Add Position Class
+    const positionNumber = state.cardsDrawn.length;
+    cardDiv.classList.add(`pos-${positionNumber}`);
+
+    // 2. Special check for Celtic Cross Center
+    if (state.spreadName.includes('Cross') && positionNumber === 2) {
+        cardDiv.classList.add('cross-center-2');
+    }
+
     // 3. Create Inner Box structure for rotation
     cardDiv.innerHTML = `
         <div class="card-inner ${isReversed ? 'is-flipped' : ''}">
