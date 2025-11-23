@@ -235,3 +235,90 @@ textarea {
 .social-links { display: flex; justify-content: center; gap: 20px; margin-top: 15px; font-size: 1.5rem; }
 .social-links a { color: rgba(255,255,255,0.4); transition: 0.3s; }
 .social-links a:hover { color: #fff; }
+/* --- STEP 3: BREATHING DESIGN --- */
+
+/* The Container for the Icon */
+.breathing-wrapper {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* The Eye Icon */
+.breathing-icon {
+    font-size: 2.5rem;
+    color: var(--accent);
+    z-index: 2;
+    opacity: 0.9;
+}
+
+/* The Glowing Halo behind the eye */
+.breathing-halo {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--accent);
+    z-index: 1;
+    /* The Heartbeat Animation */
+    animation: heartbeat 5s infinite ease-in-out;
+}
+
+/* "Breathe." Title */
+.breathe-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 3.5rem; /* Large and elegant */
+    font-weight: 400;
+    margin: 10px 0 20px 0;
+    color: #fff;
+    text-align: center;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+/* Subtext Instructions */
+.breathe-sub {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* Update Textarea to look cleaner */
+textarea {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: center; /* Center the text inside */
+    font-family: var(--font-body);
+    font-size: 1rem;
+}
+textarea::placeholder {
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* THE HEARTBEAT ANIMATION KEYFRAMES */
+@keyframes heartbeat {
+    0% {
+        transform: scale(0.9);
+        opacity: 0.3;
+        box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+    }
+    50% {
+        transform: scale(1.4); /* Expands (Inhale) */
+        opacity: 0.6;
+        box-shadow: 0 0 30px var(--accent);
+    }
+    100% {
+        transform: scale(0.9); /* Contracts (Exhale) */
+        opacity: 0.3;
+        box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+    }
+}
