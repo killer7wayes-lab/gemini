@@ -34,7 +34,11 @@ function goToStep(stepNum) {
     const backBtn = document.getElementById('back-btn');
     if (backBtn) {
         // Hide back button only on Step 1
-        backBtn.classList.toggle('hidden', currentStep === 1);
+        if (currentStep === 1) {
+            backBtn.classList.add('hidden');
+        } else {
+            backBtn.classList.remove('hidden');
+        }
     }
 
     // 2. Handle Theme Pill (The "Classic" text)
@@ -61,13 +65,16 @@ function resetPullingStage() {
     container.innerHTML = '';
     
     // Show Deck again
-    document.getElementById('deck-pile').style.display = 'block';
+    const deckPile = document.getElementById('deck-pile');
+    if(deckPile) deckPile.style.display = 'block';
     
     // Hide Reveal Button
-    document.getElementById('read-btn').classList.add('hidden');
+    const readBtn = document.getElementById('read-btn');
+    if(readBtn) readBtn.classList.add('hidden');
     
     // Reset Counter
-    document.getElementById('cards-left').innerText = state.cardsNeeded;
+    const countLabel = document.getElementById('cards-left');
+    if(countLabel) countLabel.innerText = state.cardsNeeded;
     
     // Reshuffle
     startBreathingExercise(); 
@@ -96,7 +103,8 @@ function selectSpread(name, count) {
     state.spreadName = name;
     state.cardsNeeded = count;
     
-    document.getElementById('cards-left').innerText = count;
+    const countLabel = document.getElementById('cards-left');
+    if(countLabel) countLabel.innerText = count;
     
     // Set Layout Class for Grid
     const grid = document.getElementById('drawn-cards-container');
@@ -140,7 +148,7 @@ function startPulling() {
     goToStep(4);
 }
 
-// --- STEP 4: PULLING CARDS (FIXED REVERSALS) ---
+// --- STEP 4: PULLING CARDS (WITH IMAGE SUPPORT) ---
 function drawCard() {
     if (state.cardsDrawn.length >= state.cardsNeeded) return;
 
@@ -161,56 +169,21 @@ function drawCard() {
         cardDiv.classList.add('cross-center-2');
     }
 
-    // --- 3. IMAGE LOGIC START ---
+    // 3. IMAGE LOGIC
     let cardContent = "";
-
     if (state.deckTheme === 'Goth') {
-        // CONVERT NAME TO FILENAME: "The Fool" -> "the_sun.png"
+        // Convert "The sun" to "the_sun.png"
         const fileName = cardName.toLowerCase().split(' ').join('_') + ".png";
-        const folderPath = "decks/goth/"; // Make sure this folder exists!
-        
-        cardContent = `<img src="${folderPath}${fileName}" class="card-img" alt="${cardName}">`;
+        // Ensure you have the folder: public/decks/goth/
+        cardContent = `<img src="decks/goth/${fileName}" class="card-img" alt="${cardName}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"> <div class="fallback-text" style="display:none">${cardName}</div>`;
     } else {
-        // Default Text for other themes
         cardContent = `<div class="card-name">${cardName}</div>`;
     }
-    // --- IMAGE LOGIC END ---
 
-    // 4. Render the Card
+    // 4. Render Inner Card
     cardDiv.innerHTML = `
         <div class="card-inner ${isReversed ? 'is-flipped' : ''}">
             ${cardContent}
-            ${isReversed ? '<div class="rev-icon" style="font-size:0.8rem; margin-top:5px;">↻</div>' : ''}
-        </div>
-    `;
-    
-    container.appendChild(cardDiv);
-
-    // Update Counter
-    const remaining = state.cardsNeeded - state.cardsDrawn.length;
-    document.getElementById('cards-left').innerText = remaining;
-
-    if (remaining === 0) {
-        document.getElementById('deck-pile').style.display = 'none';
-        const btn = document.getElementById('read-btn');
-        btn.classList.remove('hidden');
-        btn.style.animation = "fadeIn 1s";
-    }
-}
-    
-    // 1. Add Position Class
-    const positionNumber = state.cardsDrawn.length;
-    cardDiv.classList.add(`pos-${positionNumber}`);
-
-    // 2. Special check for Celtic Cross Center
-    if (state.spreadName.includes('Cross') && positionNumber === 2) {
-        cardDiv.classList.add('cross-center-2');
-    }
-
-    // 3. Create Inner Box structure for rotation
-    cardDiv.innerHTML = `
-        <div class="card-inner ${isReversed ? 'is-flipped' : ''}">
-            <div class="card-name">${cardName}</div>
             ${isReversed ? '<div class="rev-icon" style="font-size:0.8rem; margin-top:5px;">↻</div>' : ''}
         </div>
     `;
@@ -270,30 +243,24 @@ async function getAIReading() {
     }
 }
 
-// Copy to Clipboard
+// --- FOOTER BUTTONS ---
+
 function copyReading() {
     const text = document.getElementById('ai-response').innerText;
     navigator.clipboard.writeText(text).then(() => {
         alert("Reading saved to clipboard!");
     });
 }
-// --- NEW BUTTON FUNCTIONS ---
 
-// Option 1: Keep Question, Clear Cards, Go to Step 4
 function pullAgain() {
-    resetPullingStage(); // Clears the grid and resets the deck
-    goToStep(4);         // Go straight to pulling
+    resetPullingStage();
+    goToStep(4);
 }
 
-// Option 2: Clear Question, Clear Cards, Go to Step 3
 function askNewQuestion() {
-    resetPullingStage(); // Clears the grid
-    
-    // Clear the input box
+    resetPullingStage();
     const input = document.getElementById('user-question');
     if (input) input.value = "";
-    
-    state.question = ""; // Clear internal state
-    
-    goToStep(3); // Go back to the "Breathe" / Input screen
+    state.question = "";
+    goToStep(3);
 }
