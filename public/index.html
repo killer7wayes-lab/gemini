@@ -5,17 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mystic AI Tarot</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-   <body>
-
-    <!-- 1. CLASSIC BACKGROUND (Sun/Moon - Default) -->
-    <!-- The 'active' class makes this show up first -->
+    <!-- 1. CLASSIC BACKGROUND -->
     <div class="theme-bg classic-bg active">
-        <div class="celestial-wrapper"> <!-- Re-using your star animations here -->
+        <div class="celestial-wrapper">
             <i class="fas fa-sun big-sun"></i>
             <i class="fas fa-moon big-moon"></i>
             <i class="fas fa-star big-star star-1"></i>
@@ -24,15 +20,17 @@
         </div>
     </div>
 
-    
+    <!-- 2. ANIME BACKGROUND -->
+    <div class="theme-bg anime-bg">
+        <i class="fas fa-certificate anime-sparkle s-1"></i>
+        <i class="fas fa-certificate anime-sparkle s-2"></i>
+        <i class="fas fa-cloud anime-cloud"></i>
+    </div>
 
-    <!-- 3. GOTH BACKGROUND (The Void) -->
-    <!-- Empty because we use pure black + fog CSS for that "high fashion" look -->
+    <!-- 3. GOTH BACKGROUND -->
     <div class="theme-bg goth-bg"></div>
 
-    <!-- Main App Content Starts Here... -->
-    <div class="main-glass-panel">
-
+    <!-- MAIN APP CONTAINER -->
     <div class="main-glass-panel">
         <header>
             <button id="back-btn" class="nav-btn hidden" onclick="goBack()">
@@ -74,75 +72,56 @@
             </div>
         </section>
 
-       <!-- STEP 2: SPREAD -->
+        <!-- STEP 2: SPREAD -->
         <section id="step-2" class="step">
             <h3 class="section-title">Select Spread Type</h3>
             <div class="list-options">
-                <!-- Quick Reads (1-3 Cards) -->
                 <button onclick="selectSpread('1 Card Pull', 1)">🃏 Single Card Guidance</button>
                 <button onclick="selectSpread('3 Card Spread', 3)">⏳ Past, Present, Future</button>
                 <button onclick="selectSpread('Mind Body Spirit', 3)">🧘 Mind, Body, Spirit</button>
-                
-                <!-- Specific Areas (3 Cards) -->
                 <button onclick="selectSpread('Career & Wealth', 3)">💰 Career & Wealth</button>
                 <button onclick="selectSpread('Love & Connection', 3)">❤️ Love & Connection</button>
-                
-                <!-- Deep Dives (7+ Cards) -->
                 <button onclick="selectSpread('Horseshoe Spread', 7)">🧲 The Horseshoe (Life Path)</button>
                 <button onclick="selectSpread('9 Card Destiny Grid', 9)">🌌 9 Card Destiny Grid</button>
                 <button onclick="selectSpread('Celtic Cross', 10)">✨ Celtic Cross (Deep Analysis)</button>
             </div>
         </section>
 
-      <!-- STEP 3: BREATHE & FOCUS (Video Style) -->
+        <!-- STEP 3: BREATHE -->
         <section id="step-3" class="step">
             <div class="meditation-container">
-                
-                <!-- The Pulsing Eye -->
                 <div class="eye-wrapper">
                     <div class="pulse-ring"></div>
                     <i class="far fa-eye eye-icon"></i>
                 </div>
-
-                <!-- Elegant Text -->
                 <h2 class="meditation-title">"Breathe."</h2>
                 <p class="meditation-sub">
                     Close your eyes. Visualize your question.<br>
                     When you feel the pull, proceed.
                 </p>
-
-                <!-- Minimalist Input (Ghost Style) -->
                 <input type="text" id="user-question" class="ghost-input" placeholder="Type your question (Optional)..." autocomplete="off">
-
-                <!-- Transparent Outline Button -->
                 <button class="btn-outline" onclick="startPulling()">I Am Ready</button>
             </div>
         </section>
-       <!-- STEP 4: PULL CARDS (Fixed UX) -->
+
+        <!-- STEP 4: PULL CARDS -->
         <section id="step-4" class="step">
             <div class="ritual-container">
                 <h3 class="ritual-title">The Fates Await</h3>
-                
                 <div class="controls-row">
                     <p class="ritual-sub">Cards remaining: <span id="cards-left" class="counter-glow">0</span></p>
-                    <!-- NEW SHUFFLE BUTTON -->
                     <button class="mini-btn" onclick="resetPullingStage()" title="Reshuffle / Reset">
                         <i class="fas fa-sync-alt"></i> Restart
                     </button>
                 </div>
                 
-                <!-- The Deck Pile -->
                 <div class="deck-area">
                      <div id="deck-pile" class="card-stack" onclick="drawCard()">
                         <div class="deck-pattern"></div>
                      </div>
                 </div>
                 
-                <!-- Drawn Cards (Grid Layout) -->
-                <!-- Note: The class 'layout-3' or 'layout-cross' will be added by JS -->
                 <div id="drawn-cards-container" class="drawn-grid"></div>
-
-                <!-- Reveal Button -->
                 <button id="read-btn" class="btn-outline hidden" onclick="getAIReading()">✨ Reveal Prophecy ✨</button>
             </div>
         </section>
@@ -150,26 +129,21 @@
         <!-- STEP 5: READING -->
         <section id="step-5" class="step">
             <h3 class="section-title">The Interpretation</h3>
-            
             <div id="loading" class="hidden">
                 <div style="text-align:center; margin:20px;">
                     <i class="fas fa-spinner fa-spin" style="font-size:2rem; color:var(--accent);"></i>
                     <p>Consulting the spirits...</p>
                 </div>
             </div>
-
             <div id="error-box" style="color:red; text-align:center;" class="hidden"></div>
-
             <div id="ai-response"></div>
             
             <div class="footer-actions">
                 <button class="btn-secondary" onclick="copyReading()"><i class="fas fa-copy"></i> Save / Copy</button>
                 <button class="btn-secondary" onclick="location.reload()"><i class="fas fa-redo"></i> New Reading</button>
-                
                 <a href="#" class="btn-action" style="text-align:center; text-decoration:none; color:#000;">
                     <i class="fas fa-coffee"></i> Buy me a Coffee
                 </a>
-
                 <div class="social-links">
                     <a href="#"><i class="fab fa-twitter"></i></a>
                     <a href="#"><i class="fab fa-instagram"></i></a>
