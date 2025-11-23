@@ -11,6 +11,7 @@ const fullDeckData = [
     "Ace of Pentacles", "Two of Pentacles", "Three of Pentacles", "Four of Pentacles", "Five of Pentacles", "Six of Pentacles", "Seven of Pentacles", "Eight of Pentacles", "Nine of Pentacles", "Ten of Pentacles", "Page of Pentacles", "Knight of Pentacles", "Queen of Pentacles", "King of Pentacles"
 ];
 
+// App State
 let currentStep = 1;
 let shuffledDeck = [];
 let state = {
@@ -43,6 +44,7 @@ function goToStep(stepNum) {
         if (currentStep === 1) {
             deckIndicator.classList.add('hidden');
         }
+        // If we are NOT on step 1, selectDeck() will handle showing it
     }
 }
 
@@ -55,22 +57,11 @@ function goBack() {
 
 function resetPullingStage() {
     state.cardsDrawn = [];
-    
-    // Reset UI
-    const container = document.getElementById('drawn-cards-container');
-    container.innerHTML = '';
-    
-    // Show Deck again
-    document.getElementById('deck-pile').style.display = 'block';
-    
-    // Hide Reveal Button
+    document.getElementById('drawn-cards-container').innerHTML = '';
+    document.getElementById('deck-pile').classList.remove('hidden');
     document.getElementById('read-btn').classList.add('hidden');
-    
-    // Reset Counter
+    document.getElementById('pull-instruction').innerText = "Tap the deck";
     document.getElementById('cards-left').innerText = state.cardsNeeded;
-    
-    // Reshuffle
-    startBreathingExercise(); 
 }
 
 // --- STEP 1: THEME SELECTION ---
@@ -96,20 +87,12 @@ function selectSpread(name, count) {
     state.spreadName = name;
     state.cardsNeeded = count;
     
-    document.getElementById('cards-left').innerText = count;
+    const countLabel = document.getElementById('cards-left');
+    if(countLabel) countLabel.innerText = count;
     
-    // Set Layout Class for Grid
-    const grid = document.getElementById('drawn-cards-container');
-    grid.className = 'drawn-grid'; // Reset class
-    
-    if (count === 1) grid.classList.add('layout-1');
-    else if (count === 3) grid.classList.add('layout-3');
-    else if (count === 7) grid.classList.add('layout-horseshoe');
-    else if (count === 9) grid.classList.add('layout-9');
-    else if (name.includes('Cross')) grid.classList.add('layout-cross');
-    else grid.classList.add('layout-default'); 
-
     goToStep(3);
+    
+    // We start the shuffle here so it's ready for Step 3/4
     startBreathingExercise();
 }
 
@@ -121,6 +104,10 @@ function startBreathingExercise() {
         const j = Math.floor(Math.random() * (i + 1));
         [shuffledDeck[i], shuffledDeck[j]] = [shuffledDeck[j], shuffledDeck[i]];
     }
+
+    // (Optional) Breathing Text Logic
+    const text = document.getElementById('breath-text');
+    if (text) text.innerText = "Inhale...";
 }
 
 function startPulling() {
@@ -140,32 +127,31 @@ function startPulling() {
     goToStep(4);
 }
 
-// --- STEP 4: PULLING CARDS (FIXED REVERSALS) ---
+// --- STEP 4: PULLING CARDS ---
 function drawCard() {
     if (state.cardsDrawn.length >= state.cardsNeeded) return;
 
+    // Pull from our shuffled deck
     const cardName = shuffledDeck.pop(); 
-    const isReversed = Math.random() < 0.4; // 40% chance
+    
+    // 40% chance of Reversal
+    const isReversed = Math.random() < 0.4;
+
     state.cardsDrawn.push({ name: cardName, isReversed: isReversed });
 
+    // UI Update
     const container = document.getElementById('drawn-cards-container');
     const cardDiv = document.createElement('div');
     cardDiv.className = 'tarot-card-display';
     
-    // 1. Add Position Class
-    const positionNumber = state.cardsDrawn.length;
-    cardDiv.classList.add(`pos-${positionNumber}`);
-
-    // 2. Special check for Celtic Cross Center
-    if (state.spreadName.includes('Cross') && positionNumber === 2) {
-        cardDiv.classList.add('cross-center-2');
+    if (isReversed) {
+        cardDiv.classList.add('reversed');
+        cardDiv.title = "Reversed";
     }
 
-    // 3. Create Inner Box structure for rotation
     cardDiv.innerHTML = `
-        <div class="card-inner ${isReversed ? 'is-flipped' : ''}">
+        <div class="card-content">
             <div class="card-name">${cardName}</div>
-            ${isReversed ? '<div class="rev-icon" style="font-size:0.8rem; margin-top:5px;">↻</div>' : ''}
         </div>
     `;
     
@@ -175,12 +161,11 @@ function drawCard() {
     const remaining = state.cardsNeeded - state.cardsDrawn.length;
     document.getElementById('cards-left').innerText = remaining;
 
-    // Check if finished
+    // Check if done
     if (remaining === 0) {
-        document.getElementById('deck-pile').style.display = 'none';
-        const btn = document.getElementById('read-btn');
-        btn.classList.remove('hidden');
-        btn.style.animation = "fadeIn 1s";
+        document.getElementById('deck-pile').classList.add('hidden');
+        document.getElementById('read-btn').classList.remove('hidden');
+        document.getElementById('pull-instruction').innerText = "The destiny is set.";
     }
 }
 
