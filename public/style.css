@@ -1,616 +1,197 @@
-/* Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap');
+/* --- 1. FONTS --- */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,400&family=Lato:wght@300;400&family=Playfair+Display:ital@0;1&family=Quicksand:wght@400;700&display=swap');
+
+/* GLOBAL RESET (Fixes squishing issues) */
+* { box-sizing: border-box; }
 
 :root {
-    --container-bg: rgba(20, 30, 48, 0.75); /* Slightly darker for readability */
+    --container-bg: rgba(20, 30, 48, 0.85); /* Slightly more opaque for readability */
     --accent: #fffdd0; 
     --text: #fff;
     --font-header: 'Playfair Display', serif;
     --font-body: 'Lato', sans-serif;
 }
 
-/* Dynamic Themes */
-body.anime-theme { --accent: #ff70a6; }
-body.goth-theme { --accent: #ff3333; }
+/* --- 2. THEMES --- */
+.theme-bg { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+body.classic-theme .classic-bg, body.anime-theme .anime-bg, body.goth-theme .goth-bg { display: block; }
+.big-sun, .big-moon, .big-star, .anime-sparkle, .anime-petal, .anime-cloud { position: absolute; }
 
+/* THEME DEFINITIONS */
+body.classic-theme { background: url('https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?q=80&w=2565&auto=format&fit=crop') center fixed; background-size: cover; }
+body.anime-theme { background: url('https://images.unsplash.com/photo-1507608158173-1dcec673a2e5?q=80&w=2070&auto=format&fit=crop') center fixed; background-size: cover; --accent: #ff9ecd; --container-bg: rgba(45, 10, 35, 0.75); --font-header: 'Quicksand', sans-serif; }
+body.goth-theme { background: #000000; --accent: #ffffff; --container-bg: rgba(10, 10, 10, 0.9); --font-header: 'Cormorant Garamond', serif; --font-body: 'Cormorant Garamond', serif; }
+body.goth-theme .btn-action, body.goth-theme .choice-card, body.goth-theme .btn-outline { border-radius: 2px; letter-spacing: 2px; text-transform: uppercase; }
+
+/* --- 3. MAIN LAYOUT (FIXED PADDING) --- */
 body {
-    /* Background Image */
-    background: url('https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?q=80&w=2565&auto=format&fit=crop') no-repeat center center fixed;
-    background-size: cover;
-    color: var(--text);
-    font-family: var(--font-body);
-    margin: 0;
-    
-    /* SCROLLING FIXES */
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start; /* Starts content at top (fixes top cut-off) */
-    padding: 40px 0; /* Adds breathing room on mobile */
-    overflow-x: hidden; /* Prevents side-scrolling */
-    overflow-y: auto;   /* ENABLE SCROLLING */
-    position: relative;
+    margin: 0; min-height: 100vh; color: var(--text); font-family: var(--font-body);
+    display: flex; justify-content: center; align-items: center;
+    overflow-x: hidden; overflow-y: auto;
 }
 
-/* --- CELESTIAL DECORATIONS (FIXED POSITION) --- */
-/* This keeps the stars still while you scroll the text */
-.celestial-wrapper {
-    position: fixed; /* Changed from absolute to fixed */
-    top: 0; left: 0; width: 100%; height: 100%;
-    pointer-events: none; 
-    z-index: 0; 
-    overflow: hidden;
-}
-
-/* The Big Sun */
-.big-sun {
-    position: absolute;
-    bottom: -50px; left: 50%; transform: translateX(-50%);
-    font-size: 300px;
-    color: rgba(255, 255, 255, 0.05);
-    animation: rotateSlow 60s linear infinite;
-}
-
-/* The Moon */
-.big-moon {
-    position: absolute; top: 50px; right: 50px;
-    font-size: 80px; color: rgba(255, 255, 255, 0.1);
-    transform: rotate(-20deg);
-}
-
-/* Stars */
-.big-star { position: absolute; color: var(--accent); opacity: 0.4; animation: twinkle 3s infinite alternate; }
-.star-1 { top: 15%; left: 10%; font-size: 20px; }
-.star-2 { bottom: 20%; right: 15%; font-size: 15px; animation-delay: 1s; }
-.star-3 { top: 40%; left: 80%; font-size: 10px; animation-delay: 2s; }
-.big-sparkle {
-    position: absolute; top: 10%; left: 40%;
-    font-size: 30px; color: rgba(255, 255, 255, 0.2);
-    animation: pulse 4s infinite;
-}
-
-@keyframes rotateSlow { from { transform: translateX(-50%) rotate(0deg); } to { transform: translateX(-50%) rotate(360deg); } }
-@keyframes twinkle { from { opacity: 0.2; transform: scale(0.8); } to { opacity: 0.6; transform: scale(1.2); } }
-@keyframes pulse { 0% { opacity: 0.1; } 50% { opacity: 0.3; } 100% { opacity: 0.1; } }
-
-
-/* --- MAIN GLASS PANEL --- */
 .main-glass-panel {
     background: var(--container-bg);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 20px;
-    padding: 30px;
-    width: 90%;
-    max-width: 450px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-    position: relative;
-    z-index: 10;
-    margin-bottom: 50px; /* Extra space at bottom for scrolling */
+    border-radius: 24px;
+    display: block; width: 95%; max-width: 550px;
+    
+    /* FIXED PADDING: More breathing room on sides */
+    padding: 40px 50px; 
+    
+    margin: 40px auto; position: relative; z-index: 10;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6); text-align: center;
 }
 
-/* HEADER */
-header {
-    margin-bottom: 25px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    padding-bottom: 15px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    width: 100%;
-    box-sizing: border-box;
-}
-
+/* --- 4. HEADER --- */
+header { display: flex; flex-direction: column; align-items: center; margin-bottom: 30px; width: 100%; }
 h1 {
-    margin: 0;
-    font-family: var(--font-header);
-    font-size: 2rem;
-    font-weight: 400;
-    color: #fff;
-    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-    cursor: pointer;
-    text-align: center;
-    letter-spacing: 2px;
-    padding: 0 45px; 
-    line-height: 1.2;
+    font-family: var(--font-header); font-size: 2.2rem; padding: 0 40px;
+    line-height: 1.2; margin: 0; text-shadow: 0 0 15px rgba(255,255,255,0.3);
 }
-
-#deck-indicator { margin-top: 10px; }
 #current-theme {
-    font-size: 0.75rem;
-    background: rgba(255,255,255,0.05);
-    padding: 6px 18px;
-    border-radius: 50px;
-    border: 1px solid rgba(255,255,255,0.2);
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 2px;
+    font-size: 0.75rem; background: rgba(255,255,255,0.1); padding: 5px 15px;
+    border-radius: 20px; margin-top: 10px; text-transform: uppercase; letter-spacing: 2px;
 }
-
 #back-btn {
-    position: absolute; left: 0; top: 0;
-    background: none; border: none;
-    color: rgba(255,255,255,0.6);
-    font-size: 1.4rem; cursor: pointer;
-    padding: 10px; z-index: 100;
+    position: absolute; left: -20px; top: 0; /* Adjusted position */
+    background: none; border: none; color: rgba(255,255,255,0.6);
+    font-size: 1.4rem; padding: 10px; cursor: pointer;
 }
 
-/* TITLES */
-h3.section-title {
-    text-align: center;
-    font-family: var(--font-header);
-    font-size: 1.6rem;
-    color: #fff;
-    margin-bottom: 25px;
-    font-weight: 400;
-}
-
-/* CARDS GRID */
-.cards-grid {
-    display: flex; gap: 15px; justify-content: center; margin-bottom: 40px;
-}
-
+/* --- 5. CARDS & BUTTONS --- */
+.cards-grid { display: flex; gap: 15px; justify-content: center; margin-bottom: 30px; }
 .choice-card {
-    background: rgba(255, 255, 255, 0.03);
-    width: 90px; height: 90px;
-    border-radius: 16px;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    width: 90px; height: 90px; border-radius: 16px;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    cursor: pointer; transition: all 0.4s ease;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer; transition: 0.3s;
 }
-.choice-card:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: var(--accent);
-    transform: translateY(-5px);
-}
+.choice-card:hover { border-color: var(--accent); transform: translateY(-5px); background: rgba(255,255,255,0.1); }
 .choice-card .icon { font-size: 1.8rem; margin-bottom: 5px; }
-.choice-card span { font-size: 0.75rem; letter-spacing: 1px; text-transform: uppercase; }
-
-/* BUTTONS & INPUTS */
-textarea {
-    width: 100%; height: 100px;
-    background: rgba(0,0,0,0.2);
-    border: 1px solid rgba(255,255,255,0.1);
-    color: white; padding: 15px; border-radius: 5px;
-    font-family: var(--font-body);
-    box-sizing: border-box; /* Fixes padding overflow */
-}
-
-.btn-action {
-    width: 100%; padding: 15px;
-    background: #fff; color: #1a222b;
-    border: none; border-radius: 4px;
-    font-weight: bold; text-transform: uppercase; letter-spacing: 2px;
-    cursor: pointer; margin-top: 15px;
-    font-size: 0.9rem;
-}
 
 .list-options button {
-    width: 100%; padding: 15px; margin-bottom: 10px;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.1);
-    color: rgba(255,255,255,0.8);
-    border-radius: 5px; text-align: left; cursor: pointer;
+    width: 100%; padding: 15px 20px; margin-bottom: 12px;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    color: #fff; border-radius: 10px; text-align: left; cursor: pointer;
+    font-family: var(--font-body); font-size: 1rem; transition: 0.2s;
+}
+.list-options button:hover { border-color: var(--accent); background: rgba(255,255,255,0.15); transform: translateX(5px); }
+
+/* --- 6. CONTROLS & RESTART (FIXED STYLE) --- */
+.controls-row { display: flex; justify-content: center; align-items: center; gap: 20px; margin-bottom: 20px; }
+
+/* The Restart Button Fix */
+.mini-btn { 
+    background: transparent; 
+    border: 1px solid rgba(255,255,255,0.4); 
+    color: rgba(255,255,255,0.8); 
+    padding: 6px 15px; 
+    border-radius: 20px; 
+    cursor: pointer; 
+    font-size: 0.75rem; 
+    text-transform: uppercase; 
+    letter-spacing: 1px;
+    transition: 0.3s;
     font-family: var(--font-body);
 }
+.mini-btn:hover { background: var(--accent); color: #000; border-color: var(--accent); }
 
-/* CARD DISPLAY (Scroll Fix applied here naturally) */
+/* --- 7. DRAWN CARDS --- */
+.deck-area { margin-bottom: 30px; perspective: 1000px; }
 .card-stack {
-    width: 100px; height: 160px;
-    background: #222; border: 1px solid var(--accent);
-    border-radius: 8px; cursor: pointer; margin: 0 auto;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    width: 100px; height: 160px; background: #1a1a1a; border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 10px; position: relative; cursor: pointer; margin: 0 auto;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1), 0 10px 20px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s;
 }
-.tarot-card-display {
-    width: 90px; height: 150px;
-    background: white; color: black;
-    border-radius: 5px; border: 2px solid var(--accent);
-    display: flex; align-items: center; justify-content: center;
-    text-align: center; margin: 5px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+.card-stack:hover { transform: translateY(-5px); border-color: var(--accent); box-shadow: 0 0 15px var(--accent); }
+.deck-pattern { width: 100%; height: 100%; border-radius: 10px; opacity: 0.3; background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, var(--accent) 10px, var(--accent) 11px); }
+
+/* Grids */
+.drawn-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 20px; width: 100%; }
+.tarot-card-display { width: 90px; height: 140px; background: transparent; display: flex; justify-content: center; perspective: 1000px; animation: deal 0.5s ease; }
+.card-inner {
+    width: 100%; height: 100%; background: #fff; color: #000;
+    border: 2px solid var(--accent); border-radius: 6px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+    padding: 5px; box-sizing: border-box; transition: transform 0.6s;
 }
-.tarot-card-display.reversed { transform: rotate(180deg); filter: sepia(0.5); }
+.card-inner.is-flipped { transform: rotate(180deg); background: #eee; border-color: #ff5555; }
+.rev-icon { color: #ff5555; font-size: 0.8rem; margin-top: 5px; }
 
-/* READING RESULT (Ensure text wraps) */
-#ai-response {
-    text-align: left;
-    white-space: pre-wrap; /* Preserves paragraphs */
-    margin-bottom: 20px;
+/* Spread Layouts */
+.layout-horseshoe .tarot-card-display { width: 12%; max-width: 60px; height: 90px; }
+.layout-horseshoe .card-inner { font-size: 0.5rem; }
+.layout-horseshoe { align-items: flex-start; min-height: 180px; }
+.layout-horseshoe .pos-4 { margin-top: 0; }
+.layout-horseshoe .pos-3, .layout-horseshoe .pos-5 { margin-top: 20px; }
+.layout-horseshoe .pos-2, .layout-horseshoe .pos-6 { margin-top: 45px; }
+.layout-horseshoe .pos-1, .layout-horseshoe .pos-7 { margin-top: 70px; }
+@media (max-width: 450px) {
+    .layout-horseshoe { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+    .layout-horseshoe .tarot-card-display { width: 100%; margin-top: 0 !important; }
+}
+.layout-cross { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; max-width: 450px; }
+.layout-cross .pos-1 { grid-column: 2; grid-row: 2; }
+.layout-cross .pos-2 { grid-column: 2; grid-row: 2; transform: rotate(90deg); z-index: 2; }
+.layout-cross .pos-3 { grid-column: 2; grid-row: 1; }
+.layout-cross .pos-4 { grid-column: 2; grid-row: 3; }
+.layout-cross .pos-5 { grid-column: 1; grid-row: 2; }
+.layout-cross .pos-6 { grid-column: 3; grid-row: 2; }
+.layout-cross .pos-7 { grid-column: 5; grid-row: 4; }
+.layout-cross .pos-8 { grid-column: 5; grid-row: 3; }
+.layout-cross .pos-9 { grid-column: 5; grid-row: 2; }
+.layout-cross .pos-10 { grid-column: 5; grid-row: 1; }
+@media (max-width: 450px) {
+    .layout-cross { display: grid; grid-template-columns: repeat(3, 1fr); }
+    .layout-cross .pos-7, .layout-cross .pos-8, .layout-cross .pos-9, .layout-cross .pos-10 { grid-column: auto; grid-row: auto; }
 }
 
-/* UTILITIES */
-.step { display: none; animation: fadeIn 0.8s; }
-.step.active { display: block; }
-.hidden { display: none !important; }
-@keyframes fadeIn { from {opacity:0; transform:translateY(10px);} to {opacity:1; transform:translateY(0);} }
+/* --- 8. OTHER SECTIONS (Breathe, Reading, Footer) --- */
+.meditation-container { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+.eye-wrapper { position: relative; width: 80px; height: 80px; display: flex; justify-content: center; align-items: center; }
+.eye-icon { font-size: 3rem; color: #fff; z-index: 2; }
+.pulse-ring { position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 1px solid rgba(255,255,255,0.3); animation: pulse 4s infinite ease-in-out; }
+.meditation-title { font-family: var(--font-header); font-size: 3rem; font-style: italic; margin: 0; }
+.ghost-input { background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.3); color: #fff; text-align: center; font-family: var(--font-header); font-size: 1.2rem; width: 80%; padding: 10px; outline: none; }
+.btn-outline { background: transparent; border: 1px solid rgba(255,255,255,0.5); color: #fff; padding: 12px 40px; border-radius: 50px; margin-top: 20px; cursor: pointer; font-family: var(--font-body); text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; }
+.btn-outline:hover { background: #fff; color: #000; }
 
-/* Footer */
+.footer-disclaimer { margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; font-size: 0.8rem; opacity: 0.6; }
 .footer-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
-.btn-secondary {
-    background: transparent; border: 1px solid rgba(255,255,255,0.2);
-    color: rgba(255,255,255,0.6); padding: 10px; border-radius: 5px; cursor: pointer;
+.btn-secondary { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.6); padding: 10px; border-radius: 5px; cursor: pointer; }
+
+/* THE DONATE BUTTON (GOLD) */
+.donate-btn { 
+    display: block; 
+    background: linear-gradient(45deg, #FFD700, #FFC700); 
+    color: #000; 
+    font-weight: bold; 
+    text-decoration: none; 
+    padding: 12px; 
+    border-radius: 5px; 
+    margin-top: 10px;
+    transition: transform 0.2s;
 }
+.donate-btn:hover { transform: scale(1.02); }
+
 .social-links { display: flex; justify-content: center; gap: 20px; margin-top: 15px; font-size: 1.5rem; }
 .social-links a { color: rgba(255,255,255,0.4); transition: 0.3s; }
 .social-links a:hover { color: #fff; }
-/* --- STEP 3: BREATHING DESIGN --- */
 
-/* The Container for the Icon */
-.breathing-wrapper {
-    position: relative;
-    width: 80px;
-    height: 80px;
-    margin: 0 auto 20px auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+/* UTILITIES */
+.step { display: none; width: 100%; animation: fadeIn 0.5s forwards; }
+.step.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse { 0% {transform: scale(0.9); opacity: 0.3;} 50% {transform: scale(1.4); opacity: 0.6;} 100% {transform: scale(0.9); opacity: 0.3;} }
+@keyframes deal { from {opacity:0; transform:translateY(-20px);} to {opacity:1; transform:translateY(0);} }
+@keyframes rotateSlow { from {transform:translateX(-50%) rotate(0deg);} to {transform:translateX(-50%) rotate(360deg);} }
 
-/* The Eye Icon */
-.breathing-icon {
-    font-size: 2.5rem;
-    color: var(--accent);
-    z-index: 2;
-    opacity: 0.9;
+/* MOBILE OVERRIDES */
+@media (max-width: 480px) {
+    .main-glass-panel { padding: 30px 20px; } /* Less padding on phones */
+    h1 { padding: 0 20px; font-size: 1.8rem; }
+    .controls-row { flex-direction: column; gap: 10px; } /* Stack Reset button under text */
 }
-
-/* The Glowing Halo behind the eye */
-.breathing-halo {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid var(--accent);
-    z-index: 1;
-    /* The Heartbeat Animation */
-    animation: heartbeat 5s infinite ease-in-out;
-}
-
-/* "Breathe." Title */
-.breathe-title {
-    font-family: 'Playfair Display', serif;
-    font-style: italic;
-    font-size: 3.5rem; /* Large and elegant */
-    font-weight: 400;
-    margin: 10px 0 20px 0;
-    color: #fff;
-    text-align: center;
-    text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-}
-
-/* Subtext Instructions */
-.breathe-sub {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.1rem;
-    line-height: 1.6;
-    color: rgba(255, 255, 255, 0.8);
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-/* Update Textarea to look cleaner */
-textarea {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    text-align: center; /* Center the text inside */
-    font-family: var(--font-body);
-    font-size: 1rem;
-}
-textarea::placeholder {
-    font-style: italic;
-    color: rgba(255, 255, 255, 0.4);
-}
-
-/* THE HEARTBEAT ANIMATION KEYFRAMES */
-@keyframes heartbeat {
-    0% {
-        transform: scale(0.9);
-        opacity: 0.3;
-        box-shadow: 0 0 0 rgba(255, 255, 255, 0);
-    }
-    50% {
-        transform: scale(1.4); /* Expands (Inhale) */
-        opacity: 0.6;
-        box-shadow: 0 0 30px var(--accent);
-    }
-    100% {
-        transform: scale(0.9); /* Contracts (Exhale) */
-        opacity: 0.3;
-        box-shadow: 0 0 0 rgba(255, 255, 255, 0);
-    }
-}
-/* --- STEP 3: VIDEO STYLE MEDITATION --- */
-
-/* Force everything to center vertically and horizontally */
-#step-3 {
-    display: none; /* Hidden by default until active */
-    text-align: center;
-    width: 100%;
-}
-#step-3.active {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    animation: fadeIn 1s ease-in;
-}
-
-.meditation-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 25px; /* Space between elements */
-    width: 100%;
-}
-
-/* 1. The Eye & Pulse Animation */
-.eye-wrapper {
-    position: relative;
-    width: 80px; height: 80px;
-    display: flex; justify-content: center; align-items: center;
-    margin-bottom: 10px;
-}
-
-.eye-icon {
-    font-size: 3rem;
-    color: rgba(255, 255, 255, 0.9);
-    z-index: 2;
-}
-
-.pulse-ring {
-    position: absolute;
-    width: 100%; height: 100%;
-    border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-    animation: pulse-video 4s infinite ease-in-out;
-}
-
-@keyframes pulse-video {
-    0% { transform: scale(0.8); opacity: 0.2; }
-    50% { transform: scale(1.4); opacity: 0.6; }
-    100% { transform: scale(0.8); opacity: 0.2; }
-}
-
-/* 2. Typography (The Video Look) */
-.meditation-title {
-    font-family: 'Playfair Display', serif;
-    font-style: italic;
-    font-size: 3.5rem;
-    font-weight: 400;
-    color: #fff;
-    margin: 0;
-    text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
-}
-
-.meditation-sub {
-    font-family: 'Lato', sans-serif; /* Clean sans-serif for reading */
-    font-size: 1rem;
-    color: rgba(255, 255, 255, 0.6);
-    line-height: 1.6;
-    margin: 0;
-    max-width: 80%;
-}
-
-/* 3. The "Ghost" Input */
-.ghost-input {
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-    color: #fff;
-    text-align: center;
-    font-family: 'Playfair Display', serif;
-    font-size: 1.1rem;
-    padding: 10px;
-    width: 80%;
-    outline: none;
-    transition: 0.3s;
-}
-.ghost-input:focus {
-    border-bottom-color: var(--accent);
-}
-.ghost-input::placeholder {
-    color: rgba(255, 255, 255, 0.3);
-    font-style: italic;
-    font-size: 0.9rem;
-}
-
-/* 4. The Outline Button (From the Video) */
-.btn-outline {
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    color: #fff;
-    padding: 12px 40px;
-    border-radius: 50px; /* Pill shape */
-    font-family: 'Lato', sans-serif;
-    font-size: 0.9rem;
-    letter-spacing: 1px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-top: 20px;
-}
-
-.btn-outline:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: #fff;
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
-}
-/* --- STEP 4: RITUAL CARD PULLING --- */
-
-.ritual-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-}
-
-.ritual-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 2rem;
-    color: #fff;
-    margin-bottom: 5px;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-}
-
-.ritual-sub {
-    font-family: 'Lato', sans-serif;
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.6);
-    margin-bottom: 30px;
-}
-
-.counter-glow {
-    color: var(--accent);
-    font-weight: bold;
-    font-size: 1.1rem;
-}
-
-/* THE DECK STACK */
-.deck-area {
-    margin-bottom: 30px;
-    perspective: 1000px; /* Adds 3D depth */
-}
-
-.card-stack {
-    width: 100px;
-    height: 160px;
-    background: #1a1a1a;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 10px;
-    position: relative;
-    cursor: pointer;
-    box-shadow: 
-        0 0 0 2px rgba(255, 255, 255, 0.1), /* Outer Border */
-        0 10px 20px rgba(0, 0, 0, 0.5);   /* Drop Shadow */
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-/* Hover Effect */
-.card-stack:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0 15px var(--accent);
-    border-color: var(--accent);
-}
-
-/* Click Effect */
-.card-stack:active {
-    transform: scale(0.95);
-}
-
-/* The Pattern on the Back of the Card */
-.deck-pattern {
-    width: 100%; height: 100%;
-    border-radius: 10px;
-    opacity: 0.3;
-    background-image: repeating-linear-gradient(
-        45deg,
-        transparent,
-        transparent 10px,
-        var(--accent) 10px,
-        var(--accent) 11px
-    );
-}
-
-/* THE DRAWN CARDS GRID */
-.drawn-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
-    width: 100%;
-    max-width: 400px; /* Keeps grid tight on desktop */
-}
-
-/* Individual Mini Cards */
-.tarot-card-display {
-    width: 70px; /* Small enough to fit 4 in a row */
-    height: 110px;
-    background: #fff;
-    color: #000;
-    border-radius: 6px;
-    border: 2px solid var(--accent);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    font-family: 'Playfair Display', serif;
-    font-size: 0.7rem;
-    padding: 5px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    
-    /* Animation: Glide In */
-    animation: dealCard 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-/* Reversed Styling */
-.tarot-card-display.reversed {
-    transform: rotate(180deg);
-    background: #e0e0e0; /* Slightly darker to indicate reversed */
-    border-color: #ff6b6b; /* Reddish tint border */
-}
-
-@keyframes dealCard {
-    from { 
-        opacity: 0; 
-        transform: translateY(-50px) scale(0.5); 
-    }
-    to { 
-        opacity: 1; 
-        transform: translateY(0) scale(1); 
-    }
-}
-/* 5. CELTIC CROSS (Real Shape Layout) */
-.layout-cross {
-    display: grid;
-    /* Create a grid with specific named areas */
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(4, 90px); /* Fixed height rows */
-    gap: 10px;
-    max-width: 500px;
-    
-    /* The Map: c=center, t=top, b=bottom, l=left, r=right, s=staff */
-    grid-template-areas:
-        ".  t  .  .  s10"
-        "l  c  r  .  s9"
-        ".  b  .  .  s8"
-        ".  .  .  .  s7";
-}
-
-/* On very small mobile screens, we stack the Staff below the Cross so cards aren't too small */
-@media (max-width: 400px) {
-    .layout-cross {
-        grid-template-columns: repeat(3, 1fr);
-        grid-template-rows: auto;
-        grid-template-areas:
-            ".  t  ."
-            "l  c  r"
-            ".  b  ."
-            "s7 s8 s9"
-            ". s10 .";
-    }
-}
-
-/* Position Mapping */
-.layout-cross .pos-1 { grid-area: c; z-index: 1; }
-.layout-cross .pos-2 { 
-    grid-area: c; 
-    z-index: 2; 
-    transform: rotate(90deg); /* The Crossing Card */
-    opacity: 0.9;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
-}
-.layout-cross .pos-3 { grid-area: t; } /* Top - Conscious */
-.layout-cross .pos-4 { grid-area: b; } /* Bottom - Subconscious */
-.layout-cross .pos-5 { grid-area: l; } /* Left - Past */
-.layout-cross .pos-6 { grid-area: r; } /* Right - Future */
-
-/* The Staff (Vertical Column) */
-.layout-cross .pos-7 { grid-area: s7; }
-.layout-cross .pos-8 { grid-area: s8; }
-.layout-cross .pos-9 { grid-area: s9; }
-.layout-cross .pos-10 { grid-area: s10; }
