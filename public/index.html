@@ -138,16 +138,28 @@
             <div id="error-box" style="color:red; text-align:center;" class="hidden"></div>
             <div id="ai-response"></div>
             
-          <div class="footer-actions">
+        <div class="footer-actions">
+                <!-- 1. Save -->
                 <button class="btn-secondary" onclick="copyReading()">
                     <i class="fas fa-copy"></i> Save / Copy
                 </button>
                 
+                <!-- 2. Pull Again (Same Question) -->
+                <button class="btn-secondary" onclick="pullAgain()">
+                    <i class="fas fa-sync-alt"></i> Pull Again (Same Question)
+                </button>
+
+                <!-- 3. Ask New Question (Same Deck/Spread) -->
+                <button class="btn-secondary" onclick="askNewQuestion()">
+                    <i class="fas fa-question-circle"></i> Ask Another Question
+                </button>
+
+                <!-- 4. Full Reset (Home) -->
                 <button class="btn-secondary" onclick="location.reload()">
-                    <i class="fas fa-redo"></i> New Reading
+                    <i class="fas fa-home"></i> Change Deck / Home
                 </button>
                 
-                <!-- THIS IS THE DONATE BUTTON -->
+                <!-- Donate -->
                 <a href="#" class="donate-btn">
                     <i class="fas fa-coffee"></i> Buy me a Coffee
                 </a>
