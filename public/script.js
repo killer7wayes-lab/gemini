@@ -231,3 +231,23 @@ function copyReading() {
         alert("Reading saved to clipboard!");
     });
 }
+// --- NEW BUTTON FUNCTIONS ---
+
+// Option 1: Keep Question, Clear Cards, Go to Step 4
+function pullAgain() {
+    resetPullingStage(); // Clears the grid and resets the deck
+    goToStep(4);         // Go straight to pulling
+}
+
+// Option 2: Clear Question, Clear Cards, Go to Step 3
+function askNewQuestion() {
+    resetPullingStage(); // Clears the grid
+    
+    // Clear the input box
+    const input = document.getElementById('user-question');
+    if (input) input.value = "";
+    
+    state.question = ""; // Clear internal state
+    
+    goToStep(3); // Go back to the "Breathe" / Input screen
+}
