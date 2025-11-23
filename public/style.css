@@ -602,3 +602,63 @@ textarea {
 .cross-center-2 .card-inner.is-flipped {
     transform: rotate(180deg);
 }
+/* Import the Elegant "Void" Font */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,400&display=swap');
+
+/* --- 3. GOTH THEME (The Void) --- */
+body.goth-theme {
+    background-color: #000000;
+    /* Optional: A very subtle noise texture makes black look "richer" */
+    background-image: url("https://www.transparenttextures.com/patterns/stardust.png"); 
+    background-blend-mode: overlay;
+    
+    /* The Palette */
+    --container-bg: rgba(10, 10, 10, 0.8); /* Almost black glass */
+    --accent: #ffffff; /* Stark White Contrast */
+    --text: #e0e0e0;   /* slightly softened white for reading */
+    
+    /* The Typography - Sharp & Elegant */
+    --font-header: 'Cormorant Garamond', serif; 
+    --font-body: 'Cormorant Garamond', serif;
+}
+
+/* GOTH SPECIFIC OVERRIDES */
+body.goth-theme h1 {
+    font-weight: 300; /* Thin, elegant title */
+    letter-spacing: 4px; /* Wide spacing looks expensive */
+    text-transform: uppercase;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+body.goth-theme .btn-action, 
+body.goth-theme .btn-outline {
+    border-radius: 0px; /* Sharp corners, not rounded */
+    border: 1px solid rgba(255,255,255,0.4);
+    font-family: 'Cormorant Garamond', serif;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+body.goth-theme .choice-card {
+    border-radius: 2px; /* Sharp squares */
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* The "Void Fog" Animation (Subtle smoke at the bottom) */
+body.goth-theme .goth-bg {
+    background: 
+        linear-gradient(to top, rgba(20,20,20,1) 0%, transparent 40%);
+}
+
+/* Goth Card Back (Minimalist Black) */
+body.goth-theme .card-stack {
+    background: #050505;
+    border: 1px solid #333;
+    box-shadow: 0 0 30px rgba(0,0,0,1);
+}
+body.goth-theme .deck-pattern {
+    /* Minimalist geometric line */
+    background-image: linear-gradient(0deg, transparent 49%, #222 50%, transparent 51%);
+    background-size: 100% 10px;
+    opacity: 0.3;
+}
