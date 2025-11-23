@@ -564,3 +564,53 @@ textarea::placeholder {
         transform: translateY(0) scale(1); 
     }
 }
+/* 5. CELTIC CROSS (Real Shape Layout) */
+.layout-cross {
+    display: grid;
+    /* Create a grid with specific named areas */
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(4, 90px); /* Fixed height rows */
+    gap: 10px;
+    max-width: 500px;
+    
+    /* The Map: c=center, t=top, b=bottom, l=left, r=right, s=staff */
+    grid-template-areas:
+        ".  t  .  .  s10"
+        "l  c  r  .  s9"
+        ".  b  .  .  s8"
+        ".  .  .  .  s7";
+}
+
+/* On very small mobile screens, we stack the Staff below the Cross so cards aren't too small */
+@media (max-width: 400px) {
+    .layout-cross {
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: auto;
+        grid-template-areas:
+            ".  t  ."
+            "l  c  r"
+            ".  b  ."
+            "s7 s8 s9"
+            ". s10 .";
+    }
+}
+
+/* Position Mapping */
+.layout-cross .pos-1 { grid-area: c; z-index: 1; }
+.layout-cross .pos-2 { 
+    grid-area: c; 
+    z-index: 2; 
+    transform: rotate(90deg); /* The Crossing Card */
+    opacity: 0.9;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+.layout-cross .pos-3 { grid-area: t; } /* Top - Conscious */
+.layout-cross .pos-4 { grid-area: b; } /* Bottom - Subconscious */
+.layout-cross .pos-5 { grid-area: l; } /* Left - Past */
+.layout-cross .pos-6 { grid-area: r; } /* Right - Future */
+
+/* The Staff (Vertical Column) */
+.layout-cross .pos-7 { grid-area: s7; }
+.layout-cross .pos-8 { grid-area: s8; }
+.layout-cross .pos-9 { grid-area: s9; }
+.layout-cross .pos-10 { grid-area: s10; }
