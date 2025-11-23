@@ -1,4 +1,4 @@
-// 1. The Full 78 Card Deck Data
+// 1. The Full 78 Card Deck
 const fullDeckData = [
     "The Fool", "The Magician", "The High Priestess", "The Empress", "The Emperor", 
     "The Hierophant", "The Lovers", "The Chariot", "Strength", "The Hermit", 
@@ -11,7 +11,6 @@ const fullDeckData = [
     "Ace of Pentacles", "Two of Pentacles", "Three of Pentacles", "Four of Pentacles", "Five of Pentacles", "Six of Pentacles", "Seven of Pentacles", "Eight of Pentacles", "Nine of Pentacles", "Ten of Pentacles", "Page of Pentacles", "Knight of Pentacles", "Queen of Pentacles", "King of Pentacles"
 ];
 
-// App State
 let currentStep = 1;
 let shuffledDeck = [];
 let state = {
@@ -22,154 +21,136 @@ let state = {
     question: ''
 };
 
-// --- NAVIGATION LOGIC ---
+// Navigation
 function goToStep(stepNum) {
-    // Hide all steps
     document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
-    // Show target step
     document.getElementById(`step-${stepNum}`).classList.add('active');
-    
     currentStep = stepNum;
     
-    // 1. Handle Back Button
     const backBtn = document.getElementById('back-btn');
-    if (backBtn) {
-        // Hide back button only on Step 1
-        backBtn.classList.toggle('hidden', currentStep === 1);
-    }
+    if (backBtn) backBtn.classList.toggle('hidden', currentStep === 1);
 
-    // 2. Handle Theme Pill (The "Classic" text)
     const deckIndicator = document.getElementById('deck-indicator');
-    if (deckIndicator) {
-        if (currentStep === 1) {
-            deckIndicator.classList.add('hidden');
-        }
-        // If we are NOT on step 1, selectDeck() will handle showing it
-    }
+    if (deckIndicator && currentStep === 1) deckIndicator.classList.add('hidden');
 }
 
 function goBack() {
     if (currentStep > 1) {
-        if (currentStep === 4) resetPullingStage();
+        if (currentStep === 4) resetPullingStage(); // Auto-reset if they leave step 4
         goToStep(currentStep - 1);
     }
 }
 
+// --- NEW SHUFFLE / RESET FUNCTION ---
 function resetPullingStage() {
     state.cardsDrawn = [];
-    document.getElementById('drawn-cards-container').innerHTML = '';
-    document.getElementById('deck-pile').classList.remove('hidden');
+    
+    // Reset UI
+    const container = document.getElementById('drawn-cards-container');
+    container.innerHTML = '';
+    
+    // Show Deck again
+    document.getElementById('deck-pile').style.display = 'block';
+    
+    // Hide Reveal Button
     document.getElementById('read-btn').classList.add('hidden');
-    document.getElementById('pull-instruction').innerText = "Tap the deck";
+    
+    // Reset Counter
     document.getElementById('cards-left').innerText = state.cardsNeeded;
+    
+    // Reshuffle the internal array immediately
+    startBreathingExercise(); 
 }
 
-// --- STEP 1: THEME SELECTION ---
+// Step 1: Theme
 function selectDeck(theme) {
     state.deckTheme = theme;
-    
-    // Update Theme CSS on Body
     document.body.className = theme.toLowerCase() + '-theme';
-    
-    // Update the Pill Text
-    const themeText = document.getElementById('current-theme');
-    if(themeText) themeText.innerText = theme;
-    
-    // Show the Pill (since we are leaving home)
-    const indicator = document.getElementById('deck-indicator');
-    if(indicator) indicator.classList.remove('hidden');
-    
+    const tText = document.getElementById('current-theme');
+    if(tText) tText.innerText = theme;
+    const ind = document.getElementById('deck-indicator');
+    if(ind) ind.classList.remove('hidden');
     goToStep(2);
 }
 
-// --- STEP 2: SPREAD SELECTION ---
+// --- STEP 2: SPREAD (FIXED LAYOUTS) ---
 function selectSpread(name, count) {
     state.spreadName = name;
     state.cardsNeeded = count;
     
-    const countLabel = document.getElementById('cards-left');
-    if(countLabel) countLabel.innerText = count;
+    document.getElementById('cards-left').innerText = count;
     
+    // Set Layout Class for Grid
+    const grid = document.getElementById('drawn-cards-container');
+    grid.className = 'drawn-grid'; // Reset class
+    
+    if (count === 1) grid.classList.add('layout-1');
+    else if (count === 3) grid.classList.add('layout-3');
+    else if (count === 9) grid.classList.add('layout-9');
+    else if (name.includes('Cross')) grid.classList.add('layout-cross');
+    else grid.classList.add('layout-default'); // Fallback for 7 cards etc
+
     goToStep(3);
-    
-    // We start the shuffle here so it's ready for Step 3/4
     startBreathingExercise();
 }
 
-// --- STEP 3: BREATHING & SHUFFLING ---
+// Step 3: Breathing & Shuffling
 function startBreathingExercise() {
-    // Fisher-Yates True Random Shuffle
     shuffledDeck = [...fullDeckData];
+    // Fisher-Yates
     for (let i = shuffledDeck.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [shuffledDeck[i], shuffledDeck[j]] = [shuffledDeck[j], shuffledDeck[i]];
     }
-
-    // (Optional) Breathing Text Logic
-    const text = document.getElementById('breath-text');
-    if (text) text.innerText = "Inhale...";
 }
 
 function startPulling() {
     const qInput = document.getElementById('user-question');
-    let qValue = "";
-    
-    if (qInput) {
-        qValue = qInput.value.trim();
-    }
-    
-    // Logic: If empty, use default
-    if (!qValue) {
-        qValue = "General Guidance (No specific question asked)";
-    }
-    
+    let qValue = qInput ? qInput.value.trim() : "";
+    if (!qValue) qValue = "General Guidance";
     state.question = qValue;
     goToStep(4);
 }
 
-// --- STEP 4: PULLING CARDS ---
+// Step 4: Draw Card
 function drawCard() {
     if (state.cardsDrawn.length >= state.cardsNeeded) return;
 
-    // Pull from our shuffled deck
     const cardName = shuffledDeck.pop(); 
-    
-    // 40% chance of Reversal
     const isReversed = Math.random() < 0.4;
-
     state.cardsDrawn.push({ name: cardName, isReversed: isReversed });
 
-    // UI Update
     const container = document.getElementById('drawn-cards-container');
     const cardDiv = document.createElement('div');
     cardDiv.className = 'tarot-card-display';
     
-    if (isReversed) {
-        cardDiv.classList.add('reversed');
-        cardDiv.title = "Reversed";
+    // Special check for Celtic Cross Center cards (Card 1 & 2)
+    if (state.spreadName.includes('Cross')) {
+        if (state.cardsDrawn.length === 1) cardDiv.classList.add('cross-center-1');
+        if (state.cardsDrawn.length === 2) cardDiv.classList.add('cross-center-2');
     }
 
-    cardDiv.innerHTML = `
-        <div class="card-content">
-            <div class="card-name">${cardName}</div>
-        </div>
-    `;
+    if (isReversed) {
+        cardDiv.classList.add('reversed');
+        cardDiv.innerHTML = `<span style="transform: rotate(180deg)">${cardName}</span>`;
+    } else {
+        cardDiv.innerText = cardName;
+    }
     
     container.appendChild(cardDiv);
 
-    // Update Counter
     const remaining = state.cardsNeeded - state.cardsDrawn.length;
     document.getElementById('cards-left').innerText = remaining;
 
-    // Check if done
     if (remaining === 0) {
-        document.getElementById('deck-pile').classList.add('hidden');
-        document.getElementById('read-btn').classList.remove('hidden');
-        document.getElementById('pull-instruction').innerText = "The destiny is set.";
+        document.getElementById('deck-pile').style.display = 'none';
+        const btn = document.getElementById('read-btn');
+        btn.classList.remove('hidden');
+        btn.style.animation = "fadeIn 1s";
     }
 }
 
-// --- STEP 5: AI API CALL ---
+// Step 5: API
 async function getAIReading() {
     goToStep(5);
     const loading = document.getElementById('loading');
@@ -193,8 +174,8 @@ async function getAIReading() {
         });
 
         if (!response.ok) {
-            const errData = await response.json().catch(() => ({}));
-            throw new Error(errData.error || "Connection error.");
+            const errData = await response.json();
+            throw new Error(errData.error || "Connection error");
         }
         
         const data = await response.json();
@@ -204,15 +185,11 @@ async function getAIReading() {
     } catch (e) {
         loading.classList.add('hidden');
         errorBox.classList.remove('hidden');
-        errorBox.innerText = "The Oracle is currently silent. Please try again.";
-        console.error(e);
+        errorBox.innerText = "The connection to the Oracle was interrupted.";
     }
 }
 
-// Copy to Clipboard
 function copyReading() {
     const text = document.getElementById('ai-response').innerText;
-    navigator.clipboard.writeText(text).then(() => {
-        alert("Reading saved to clipboard!");
-    });
+    navigator.clipboard.writeText(text).then(() => alert("Saved."));
 }
