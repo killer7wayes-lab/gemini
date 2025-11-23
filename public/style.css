@@ -209,3 +209,8 @@ h1 {
     h1 { padding: 0 20px; font-size: 1.8rem; }
     .controls-row { flex-direction: column; gap: 10px; } /* Stack Reset button under text */
 }
+/* --- CRITICAL UTILITY FIX --- */
+/* This tells the browser to actually hide things with class="hidden" */
+.hidden {
+    display: none !important;
+}
