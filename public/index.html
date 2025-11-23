@@ -10,15 +10,36 @@
 </head>
 <body>
 
-    <!-- CELESTIAL BACKGROUND ELEMENTS (The Decor) -->
-    <div class="celestial-wrapper">
-        <i class="fas fa-sun big-sun"></i>
-        <i class="fas fa-moon big-moon"></i>
-        <i class="fas fa-star big-star star-1"></i>
-        <i class="fas fa-star big-star star-2"></i>
-        <i class="fas fa-star big-star star-3"></i>
-        <i class="fas fa-certificate big-sparkle"></i>
+   <body>
+
+    <!-- 1. CLASSIC BACKGROUND (Sun/Moon - Default) -->
+    <!-- The 'active' class makes this show up first -->
+    <div class="theme-bg classic-bg active">
+        <div class="celestial-wrapper"> <!-- Re-using your star animations here -->
+            <i class="fas fa-sun big-sun"></i>
+            <i class="fas fa-moon big-moon"></i>
+            <i class="fas fa-star big-star star-1"></i>
+            <i class="fas fa-star big-star star-2"></i>
+            <i class="fas fa-star big-star star-3"></i>
+        </div>
     </div>
+
+    <!-- 2. ANIME BACKGROUND (Petals/Sparkles) -->
+    <div class="theme-bg anime-bg">
+        <i class="fas fa-certificate anime-sparkle s-1"></i>
+        <i class="fas fa-certificate anime-sparkle s-2"></i>
+        <i class="fas fa-leaf anime-petal p-1"></i>
+        <i class="fas fa-leaf anime-petal p-2"></i>
+        <i class="fas fa-leaf anime-petal p-3"></i>
+    </div>
+
+    <!-- 3. GOTH BACKGROUND (The Void) -->
+    <!-- Empty because we use pure black + fog CSS for that "high fashion" look -->
+    <div class="theme-bg goth-bg"></div>
+
+    <!-- Main App Content Starts Here... -->
+    <div class="main-glass-panel">
+        ...
 
     <div class="main-glass-panel">
         <header>
