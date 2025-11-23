@@ -54,10 +54,24 @@ h1 {
     font-size: 0.75rem; background: rgba(255,255,255,0.1); padding: 5px 15px;
     border-radius: 20px; margin-top: 10px; text-transform: uppercase; letter-spacing: 2px;
 }
+/* FIXED BACK BUTTON POSITION */
 #back-btn {
-    position: absolute; left: -20px; top: 0; /* Adjusted position */
-    background: none; border: none; color: rgba(255,255,255,0.6);
-    font-size: 1.4rem; padding: 10px; cursor: pointer;
+    position: absolute;
+    left: 10px; /* Moves it INSIDE the box */
+    top: 5px;   /* Aligns nicely with the top */
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.5rem;
+    padding: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+    z-index: 20;
+}
+
+#back-btn:hover {
+    color: #fff;
+    transform: translateX(-3px); /* Little animation when hovering */
 }
 
 /* --- 5. CARDS & BUTTONS --- */
