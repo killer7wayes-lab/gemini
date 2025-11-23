@@ -214,3 +214,39 @@ h1 {
 .hidden {
     display: none !important;
 }
+/* --- CUSTOM DECK IMAGES --- */
+
+.card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image fills the card without stretching */
+    border-radius: 4px; /* Matches the card border */
+    display: block;
+}
+
+/* Fix for text inside Goth theme if images fail to load */
+body.goth-theme .card-inner {
+    background: #000; /* Black background behind the image */
+    border: 1px solid #444;
+}
+
+/* When using images, remove padding so the art goes to the edge */
+body.goth-theme .card-inner {
+    padding: 0; 
+}
+
+/* Ensure reversed icon sits on top of the image */
+.rev-icon {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: rgba(0,0,0,0.7);
+    color: #fff;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
