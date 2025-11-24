@@ -174,7 +174,7 @@ function drawCard() {
     if (state.deckTheme === 'Goth') {
         // Convert "The sun" to "the_sun.png"
         const fileName = cardName.toLowerCase().split(' ').join('_') + ".png";
-        // Ensure you have the folder: public/decks/goth/
+        // Ensure you have the folder: decks/goth/
         cardContent = `<img src="decks/goth/${fileName}" class="card-img" alt="${cardName}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"> <div class="fallback-text" style="display:none">${cardName}</div>`;
     } else {
         cardContent = `<div class="card-name">${cardName}</div>`;
